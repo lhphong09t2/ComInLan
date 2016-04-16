@@ -26,7 +26,7 @@ namespace ComInLanWindows
 
             IPAddress broadcast = IPAddress.Parse("192.168.1.255");
 
-            byte[] sendbuf = Encoding.ASCII.GetBytes("Hello guys");
+            byte[] sendbuf = Encoding.ASCII.GetBytes(inputText.Text);
             IPEndPoint ep = new IPEndPoint(broadcast, 11000);
 
             s.SendTo(sendbuf, ep);
