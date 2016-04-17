@@ -1,9 +1,9 @@
-package com.onballgroup.cominlandroid;
+package com.onballgroup.cominlan;
 
 /**
  * Created by Phong Le on 4/17/2016.
  */
-public class Server implements IServer {
+class Server implements IServer {
     private String _id;
     private String _domainId;
     private String _name;
@@ -14,7 +14,6 @@ public class Server implements IServer {
         return _id;
     }
 
-    @Override
     public void setId(String id) {
         _id = id;
     }
@@ -24,7 +23,6 @@ public class Server implements IServer {
         return _domainId;
     }
 
-    @Override
     public void setDomainId(String id) {
         _domainId = id;
     }
@@ -34,7 +32,6 @@ public class Server implements IServer {
         return _name;
     }
 
-    @Override
     public void setName(String name) {
         _name = name;
     }
@@ -44,7 +41,6 @@ public class Server implements IServer {
         return _listeingPort;
     }
 
-    @Override
     public void setListeningPort(int port) {
         _listeingPort = port;
     }

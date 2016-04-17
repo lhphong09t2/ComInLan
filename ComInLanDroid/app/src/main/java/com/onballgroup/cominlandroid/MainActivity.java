@@ -1,10 +1,15 @@
 package com.onballgroup.cominlandroid;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.onballgroup.cominlan.ComInLanClient;
+import com.onballgroup.cominlan.IServer;
+import com.onballgroup.cominlan.OnComInLanListener;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnComInLanListener {
@@ -22,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements OnComInLanListene
         _comInLanClient = new ComInLanClient(this);
         _comInLanClient.setOnComInClientListener(this);
     }
-
 
     public void startButtonClick(View v) {
 

@@ -1,4 +1,4 @@
-package com.onballgroup.cominlandroid;
+package com.onballgroup.cominlan;
 
 import android.app.Activity;
 
