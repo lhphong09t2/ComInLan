@@ -1,35 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ComInLanWindows
 {
     public partial class MainForm : Form
     {
+        private IComInLanServer _server;
+
         public MainForm()
         {
             InitializeComponent();
+
+            _server = new ComInLanServer();
+            _server.DataReceived += _server_DataReceived;
+            listenAtPort.Text = "Listent at " + _server.ListeningPort;
+
+            inputText.Text = Environment.MachineName;
+            idText.Text = _server.Id.ToString();
+        }
+
+        private void _server_DataReceived(object sender, string dataJson)
+        {
+            outputText.Text = dataJson;
         }
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,
-            ProtocolType.Udp);
+            if (_server.IsRunning)
+            {
+                startButton.Text = "Start";
+                _server.Stop();
+            }
+            else
+            {
+                startButton.Text = "Stop";
+                _server.Start();
+            }
+        }
 
-            IPAddress broadcast = IPAddress.Parse("192.168.1.255");
+        private void inputText_TextChanged(object sender, EventArgs e)
+        {
+            _server.Name = inputText.Text;
+        }
 
-            byte[] sendbuf = Encoding.ASCII.GetBytes(inputText.Text);
-            IPEndPoint ep = new IPEndPoint(broadcast, 11000);
-
-            s.SendTo(sendbuf, ep);
+        private void changIdButton_Click(object sender, EventArgs e)
+        {
+            _server.ChangId();
+            idText.Text = _server.Id.ToString();
         }
     }
 }
