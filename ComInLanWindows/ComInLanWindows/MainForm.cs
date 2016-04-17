@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComInLan;
+using System;
 using System.Windows.Forms;
 
 namespace ComInLanWindows

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComInLanWindows
+namespace ComInLan
 {
     interface IServer
     {
-        Guid Id { get; set; }
+        Guid Id { get; }
         string DomainId { get; }
-        string Name { get; set; }   
-        int ListeningPort { get; set; }
+        string Name { get; }   
+        int ListeningPort { get; }
     }
 }

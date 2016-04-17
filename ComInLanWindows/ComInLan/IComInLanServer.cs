@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ComInLanWindows
+namespace ComInLan
 {
     public delegate void ComInLanServerHandler (object sender, string dataJson);
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComInLanWindows
+namespace ComInLan
 {
-    public class Server : IServer
+    internal class Server : IServer
     {
         public string DomainId
         {

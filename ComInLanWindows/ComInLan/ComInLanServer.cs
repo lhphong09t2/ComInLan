@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace ComInLanWindows
+namespace ComInLan
 {
     public class ComInLanServer : IComInLanServer
     {
@@ -29,7 +29,7 @@ namespace ComInLanWindows
 
         private Socket _broadcastSocket;
         private Timer _advertisingTimer;
-        private IServer _broadcastPacket;
+        private Server _broadcastPacket;
 
         private UdpClient _listener;
         private IPEndPoint _groupEP;
