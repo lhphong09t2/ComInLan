@@ -21,23 +21,6 @@ public abstract class NetworkUtility {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-
-        _udpListenerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final byte[] receiveData = new byte[1024];
-
-                while (!Thread.currentThread().isInterrupted()) {
-                    try {
-                        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                        _udpListenerSocket.receive(receivePacket);
-                        onUdpDataReceived(receivePacket.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 
     protected void sendUdp(byte[] data, InetAddress address, int port) {
@@ -56,11 +39,29 @@ public abstract class NetworkUtility {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+
+        _udpListenerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final byte[] receiveData = new byte[1024];
+
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                        _udpListenerSocket.receive(receivePacket);
+                        onUdpDataReceived(receivePacket.getData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         _udpListenerThread.start();
     }
 
     protected void stopUdp() {
-        _udpListenerThread.interrupt();
+        _udpListenerThread.interrupt();;
         _udpListenerSocket.close();
     }
 
