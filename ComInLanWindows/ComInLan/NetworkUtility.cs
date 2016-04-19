@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace ComInLan
 {
@@ -20,9 +21,9 @@ namespace ComInLan
 			_udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		}
 
-		protected void SendUdp(byte[] data, IPAddress address, int port)
+		protected void SendUdp(string dataJson, IPAddress address, int port)
 		{
-			_udpSocket.SendTo(data, new IPEndPoint(address, port));
+			_udpSocket.SendTo(Encoding.UTF8.GetBytes(dataJson), new IPEndPoint(address, port));
 		}
 
 		protected void StartUdp(int udpListeningPort)
@@ -59,8 +60,8 @@ namespace ComInLan
 			//TODO write code to handle this one
 		}
 
-		protected abstract void OnUdpDataReceived(byte[] data);
-		protected abstract void OnTcpDataReceived(byte[] data);
+		protected abstract void OnUdpDataReceived(string dataJson);
+		protected abstract void OnTcpDataReceived(string dataJson);
 
 		private CancellationTokenSource _listenCTSource;
 		private Task ListenUdp()
@@ -73,7 +74,7 @@ namespace ComInLan
 				while (!cancellationToken.IsCancellationRequested)
 				{
 					var bytes = _udpClient.Receive(ref _groupEP);
-					OnUdpDataReceived(bytes);
+					OnUdpDataReceived(Encoding.UTF8.GetString(bytes));
 				}
 
 			}, cancellationToken);

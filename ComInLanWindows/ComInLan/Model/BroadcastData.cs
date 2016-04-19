@@ -1,7 +1,7 @@
 ﻿
 namespace ComInLan.Model
 {
-	public class BroadcastData : IBroadcastData
+	public class BroadcastData : BaseModel, IBroadcastData
 	{
 		public int ListeningPort { get; set; }
 	}

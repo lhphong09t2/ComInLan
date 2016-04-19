@@ -3,7 +3,7 @@ package com.onballgroup.cominlan.model;
 /**
  * Created by Phong Le on 4/18/2016.
  */
-public class ClientPacket<T> implements IClientPacket<T> {
+public class ClientPacket<T> extends BaseModel implements IClientPacket<T> {
     private String _id;
     private String _name;
     private T _data;

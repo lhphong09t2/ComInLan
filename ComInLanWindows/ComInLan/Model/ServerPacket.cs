@@ -1,7 +1,7 @@
 ﻿
 namespace ComInLan.Model
 {
-	public class ServerPacket<T> : IServerPacket<T>
+	public class ServerPacket<T> : BaseModel, IServerPacket<T>
 	{
 		public string DomainId { get; set; }
 

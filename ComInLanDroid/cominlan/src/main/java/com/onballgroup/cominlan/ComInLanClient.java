@@ -4,14 +4,16 @@ import android.app.Activity;
 
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.IBroadcastData;
+import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.IServerPacket;
+import com.onballgroup.cominlan.model.Server;
 import com.onballgroup.cominlan.model.ServerPacket;
 import com.onballgroup.cominlan.model.ServerPacketType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.Charset;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,20 +25,19 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
 
     private Activity _activity;
 
-    private List<IServerPacket<IBroadcastData>> _broadcastPackets;
+    private List<IServer> _servers;
 
-    public ComInLanClient(Activity activity)
-    {
+    public ComInLanClient(Activity activity) {
         _activity = activity;
-        _broadcastPackets = new ArrayList<IServerPacket<IBroadcastData>>();
+        _servers = new ArrayList<IServer>();
 
         initUdp();
     }
 
     private boolean _isRunning = false;
-    public  boolean isRunning()
-    {
-        return  _isRunning;
+
+    public boolean isRunning() {
+        return _isRunning;
     }
 
     private OnComInLanListener _onComInClientListener;
@@ -48,8 +49,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() {
         stopUdp();
         _isRunning = false;
     }
@@ -59,8 +59,67 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
         _onComInClientListener = listener;
     }
 
-    private IServerPacket parseJsonToServer(String json)
-    {
+    @Override
+    protected void onUdpDataReceived(String dataJson, InetAddress address) {
+        final IServerPacket serverPacket = parseJsonToServer(dataJson);
+
+        if (serverPacket.getDomainId().equals("ComInLanServer")) {
+            switch (serverPacket.getType()) {
+                case Broadcast:
+                    handleBroadcastPackets(serverPacket, address);
+                    break;
+                case Data:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onTcpDataReceived(String dataJson, InetAddress address) {
+
+    }
+
+    private void handleBroadcastPackets(final IServerPacket<IBroadcastData> broadcastPacket, InetAddress address) {
+        final Server server = new Server();
+        server.setId(broadcastPacket.getId());
+        server.setName(broadcastPacket.getName());
+        server.setAddress(address);
+        server.setPort(broadcastPacket.getData().getListeningPort());
+        server.calculateChecksum();
+
+        Server temp = null;
+        for (IServer object : _servers) {
+            if (object.getId().equals(broadcastPacket.getId())) {
+                temp = (Server) object;
+            }
+        }
+
+        if (temp == null) {
+            _servers.add(server);
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _onComInClientListener.onServerNewFound(server);
+                    _onComInClientListener.onServersChanged(_servers);
+                }
+            });
+        }
+        else if(!temp.getChecksum().equals(server.getChecksum()))
+        {
+            _servers.remove(temp);
+            _servers.add(server);
+
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _onComInClientListener.onServerChanged(server);
+                    _onComInClientListener.onServersChanged(_servers);
+                }
+            });
+        }
+    }
+
+    private IServerPacket parseJsonToServer(String json) {
         ServerPacket serverPacket = new ServerPacket();
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -79,66 +138,6 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
         }
 
         return serverPacket;
-    }
-
-    @Override
-    protected void onUdpDataReceived(byte[] data) {
-        String packetJson = new String(data, Charset.forName("US-ASCII"));
-        final IServerPacket serverPacket = parseJsonToServer(packetJson);
-
-        if (serverPacket.getDomainId().equals("ComInLanServer"))
-        {
-            switch (serverPacket.getType())
-            {
-                case Broadcast:
-                    handleBroadcastPackets(serverPacket);
-                    break;
-                case Data:
-                    break;
-            }
-        }
-    }
-
-    @Override
-    protected void onTcpDataReceived(byte[] data) {
-
-    }
-
-    private void handleBroadcastPackets(final IServerPacket<IBroadcastData> broadcastPacket)
-    {
-        IServerPacket<IBroadcastData> interServer = null;
-
-        for (IServerPacket<IBroadcastData> object : _broadcastPackets) {
-            if (object.getId().equals(broadcastPacket.getId())) {
-                interServer = object;
-            }
-        }
-
-        if (interServer == null)
-        {
-            _broadcastPackets.add(broadcastPacket);
-
-            _activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    _onComInClientListener.onServerNewFound(broadcastPacket);
-                    _onComInClientListener.onServersChanged(_broadcastPackets);
-                }
-            });
-        }
-        else
-        {
-            _broadcastPackets.remove(interServer);
-            _broadcastPackets.add(broadcastPacket);
-
-            _activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    _onComInClientListener.onServerChanged(broadcastPacket);
-                    _onComInClientListener.onServersChanged(_broadcastPackets);
-                }
-            });
-        }
     }
 }
 

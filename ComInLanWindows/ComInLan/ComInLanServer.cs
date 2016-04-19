@@ -76,7 +76,6 @@ namespace ComInLan
 			_broadcastPacket.Name = Name;
 
 			var packetJson = JsonConvert.SerializeObject(_broadcastPacket);
-			var sendbuf = Encoding.ASCII.GetBytes(packetJson);
 
 			foreach (var i in NetworkInterface.GetAllNetworkInterfaces())
 				foreach (var ua in i.GetIPProperties().UnicastAddresses)
@@ -84,16 +83,16 @@ namespace ComInLan
 					if (ua.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
 						var address = GetBroadcastAddress(ua);
-						SendUdp(sendbuf, address, BroadcastPort);
+						SendUdp(packetJson, address, BroadcastPort);
 					}
 				}
 		}
 
-		protected override void OnUdpDataReceived(byte[] data)
+		protected override void OnUdpDataReceived(string dataJson)
 		{
 		}
 
-		protected override void OnTcpDataReceived(byte[] data)
+		protected override void OnTcpDataReceived(string dataJson)
 		{
 		}
 	}

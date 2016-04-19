@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.nio.charset.Charset;
 
 /**
  * Created by lep on 4/19/2016.
@@ -49,7 +50,8 @@ public abstract class NetworkUtility {
                     try {
                         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                         _udpListenerSocket.receive(receivePacket);
-                        onUdpDataReceived(receivePacket.getData());
+                        String dataJson = new String(receivePacket.getData(), 0, receivePacket.getLength(), Charset.forName("UTF-8"));
+                        onUdpDataReceived(dataJson, receivePacket.getAddress());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -81,7 +83,7 @@ public abstract class NetworkUtility {
         //TODO write code to handle this one
     }
 
-    protected abstract void onUdpDataReceived(byte[] data);
+    protected abstract void onUdpDataReceived(String dataJson, InetAddress address);
 
-    protected abstract void onTcpDataReceived(byte[] data);
+    protected abstract void onTcpDataReceived(String dataJson, InetAddress address);
 }

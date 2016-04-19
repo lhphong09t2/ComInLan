@@ -3,7 +3,7 @@ package com.onballgroup.cominlan.model;
 /**
  * Created by Phong Le on 4/17/2016.
  */
-public class ServerPacket<T> implements IServerPacket<T> {
+public class ServerPacket<T> extends BaseModel implements IServerPacket<T> {
     private String _id;
     private String _domainId;
     private String _name;

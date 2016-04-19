@@ -7,9 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.onballgroup.cominlan.ComInLanClient;
-import com.onballgroup.cominlan.model.IBroadcastData;
-import com.onballgroup.cominlan.model.IServerPacket;
 import com.onballgroup.cominlan.OnComInLanListener;
+import com.onballgroup.cominlan.model.IServer;
 
 import java.util.List;
 
@@ -46,24 +45,24 @@ public class MainActivity extends AppCompatActivity implements OnComInLanListene
 
 
     @Override
-    public void onServerNewFound(IServerPacket<IBroadcastData> server) {
+    public void onServerNewFound(IServer server) {
 
     }
 
     @Override
-    public void onServerChanged(IServerPacket<IBroadcastData> server) {
+    public void onServerChanged(IServer server) {
 
     }
 
     @Override
-    public void onServersChanged(List<IServerPacket<IBroadcastData>> servers) {
+    public void onServersChanged(List<IServer> servers) {
         String output = "";
 
-        for (IServerPacket<IBroadcastData> server : servers) {
-            output += server.getDomainId() + " "
-                    + server.getId() + " "
+        for (IServer server : servers) {
+            output += server.getId() + " "
                     + server.getName() + " "
-                    + server.getData().getListeningPort() + "\n";
+                    + server.getAddress() + " "
+                    + server.getPort();
         }
 
         _resultView.setText(output);

@@ -3,7 +3,7 @@ package com.onballgroup.cominlan.model;
 /**
  * Created by Phong Le on 4/19/2016.
  */
-public class BroadcastData implements IBroadcastData {
+public class BroadcastData extends BaseModel implements IBroadcastData {
     private  int _listeningPort;
 
     @Override

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\BroadcastData.cs" />
     <Compile Include="Model\ClientPacket.cs" />
     <Compile Include="ComInLanClient.cs" />
