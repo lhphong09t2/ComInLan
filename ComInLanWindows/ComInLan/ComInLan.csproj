@@ -53,6 +53,7 @@
     <Compile Include="IComInLanClient.cs" />
     <Compile Include="IComInLanServer.cs" />
     <Compile Include="IServerPacket.cs" />
+    <Compile Include="NetworkUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerPacket.cs" />
     <Compile Include="ServerPacketType.cs" />

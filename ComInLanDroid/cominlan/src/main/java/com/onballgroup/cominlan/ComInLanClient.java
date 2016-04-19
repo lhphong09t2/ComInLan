@@ -24,7 +24,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
         _activity = activity;
         _broadcastPackets = new ArrayList<IServerPacket<IBroadcastData>>();
 
-        initUdp(UdpListenerPort);
+        initUdp();
     }
 
     private boolean _isRunning = false;
@@ -37,7 +37,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
 
     @Override
     public void start() {
-        startUdp();
+        startUdp(UdpListenerPort);
         _isRunning = true;
     }
 
@@ -74,7 +74,6 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
 
         return serverPacket;
     }
-
 
     @Override
     protected void onUdpDataReceived(byte[] data) {

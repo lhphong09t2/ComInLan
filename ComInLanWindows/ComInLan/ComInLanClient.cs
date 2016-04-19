@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ComInLan
 {
-	public class ComInLanClient : IComInLanClient
+	public class ComInLanClient : NetworkUtility, IComInLanClient
 	{
-		//TODO implement later
+		protected override void OnTcpDataReceived(byte[] data)
+		{
+		}
+
+		protected override void OnUdpDataReceived(byte[] data)
+		{
+		}
 	}
 }
