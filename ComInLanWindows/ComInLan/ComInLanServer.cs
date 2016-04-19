@@ -44,7 +44,8 @@ namespace ComInLan
             _broadcastPacket = new ServerPacket<IBroadcastData>()
             {
                 Data = broadcastData,
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
+				DomainId = "ComInLanServer"
             };
 
             _broadcastSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
