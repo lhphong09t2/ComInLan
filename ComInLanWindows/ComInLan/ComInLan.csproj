@@ -55,6 +55,7 @@
     <Compile Include="IServerPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerPacket.cs" />
+    <Compile Include="ServerPacketType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

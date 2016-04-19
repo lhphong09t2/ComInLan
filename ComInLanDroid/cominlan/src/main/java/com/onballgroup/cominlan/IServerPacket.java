@@ -7,5 +7,6 @@ public interface IServerPacket<T> {
     String getId();
     String getDomainId();
     String getName();
+    ServerPacketType getType();
     T getData();
 }

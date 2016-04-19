@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ComInLan
 {
-    public class ComInLanClient : IComInLanClient
-    {
-        //TODO implement later
-    }
+	public class ComInLanClient : IComInLanClient
+	{
+		//TODO implement later
+	}
 }

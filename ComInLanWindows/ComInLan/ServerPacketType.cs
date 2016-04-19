@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace ComInLan
 {
-	public interface IClientPacket<T>
+	public enum ServerPacketType
 	{
-		string Id { get; }
-		string Name { get; }
-		T Data { get; }
+		Broadcast,
+		Data
 	}
 }

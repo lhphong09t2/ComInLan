@@ -7,6 +7,7 @@ class ServerPacket<T> implements IServerPacket<T> {
     private String _id;
     private String _domainId;
     private String _name;
+    private ServerPacketType _type;
     private T _data;
 
     @Override
@@ -31,6 +32,11 @@ class ServerPacket<T> implements IServerPacket<T> {
     public String getName() {
         return _name;
     }
+
+    @Override
+    public ServerPacketType getType() { return _type; }
+
+    public void setType(ServerPacketType type) { _type = type; }
 
     public void setName(String name) {
         _name = name;

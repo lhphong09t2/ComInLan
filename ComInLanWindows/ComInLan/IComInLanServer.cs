@@ -2,20 +2,20 @@
 
 namespace ComInLan
 {
-    public delegate void ComInLanServerHandler (object sender, string dataJson);
+	public delegate void ComInLanServerHandler(object sender, string dataJson);
 
-    public interface IComInLanServer
-    {
-        string Id { get; }
-        string Name { get; set; }
-        int ListeningPort { get; }
-        bool IsRunning { get; }
+	public interface IComInLanServer
+	{
+		string Id { get; }
+		string Name { get; set; }
+		int ListeningPort { get; }
+		bool IsRunning { get; }
 
-        event ComInLanServerHandler DataReceived;
+		event ComInLanServerHandler DataReceived;
 
-        void Start();
-        void Stop();
+		void Start();
+		void Stop();
 
-        void ChangId();
-    }
+		void ChangId();
+	}
 }
