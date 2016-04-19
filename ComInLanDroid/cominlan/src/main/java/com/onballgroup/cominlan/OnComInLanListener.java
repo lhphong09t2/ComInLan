@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Phong Le on 4/17/2016.
  */
 public interface OnComInLanListener {
-    void onServerNewFound(IServer server);
-    void onServerChanged(IServer server);
-    void onServersChanged(List<IServer> servers);
+    void onServerNewFound(IServerPacket<IBroadcastData> server);
+    void onServerChanged(IServerPacket<IBroadcastData> server);
+    void onServersChanged(List<IServerPacket<IBroadcastData>> servers);
 }

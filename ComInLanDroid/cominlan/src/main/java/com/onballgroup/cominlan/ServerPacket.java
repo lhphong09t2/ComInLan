@@ -3,11 +3,11 @@ package com.onballgroup.cominlan;
 /**
  * Created by Phong Le on 4/17/2016.
  */
-class Server implements IServer {
+class ServerPacket<T> implements IServerPacket<T> {
     private String _id;
     private String _domainId;
     private String _name;
-    private int _listeingPort;
+    private T _data;
 
     @Override
     public String getId() {
@@ -37,11 +37,11 @@ class Server implements IServer {
     }
 
     @Override
-    public int getListeningPort() {
-        return _listeingPort;
+    public T getData() {
+        return _data;
     }
 
-    public void setListeningPort(int port) {
-        _listeingPort = port;
+    public void setData(T data) {
+        _data = data;
     }
 }

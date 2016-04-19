@@ -16,35 +16,38 @@ namespace ComInLan
     public class ComInLanServer : IComInLanServer
     {
         public const int BroadcastPort = 55176;
-        
-        public Guid Id { get; private set; }
+
+        public string Id { get { return _broadcastPacket.Id; } }
 
         public string Name { get; set; }
 
         public bool IsRunning { get; private set; }
 
-        public int ListeningPort { get; private set; }
+        public int ListeningPort { get { return _broadcastPacket.Data.ListeningPort; } }
 
         public event ComInLanServerHandler DataReceived;
 
         private Socket _broadcastSocket;
         private Timer _advertisingTimer;
-        private Server _broadcastPacket;
+        private ServerPacket<IBroadcastData> _broadcastPacket;
 
         private UdpClient _listener;
         private IPEndPoint _groupEP;
 
         public ComInLanServer()
         {
-            Id = Guid.NewGuid();
+            var broadcastData = new BroadcastData()
+            {
+                ListeningPort = FindAvaiablePortToListen()
+            };
 
-            ListeningPort = FindAvaiablePortToListen();
+            _broadcastPacket = new ServerPacket<IBroadcastData>()
+            {
+                Data = broadcastData,
+                Id = Guid.NewGuid().ToString()
+            };
 
             _broadcastSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            _broadcastPacket = new Server()
-            {
-                ListeningPort = ListeningPort
-            };
 
             _advertisingTimer = new Timer(5000)
             {
@@ -76,11 +79,9 @@ namespace ComInLan
             IsRunning = false;
         }
 
-
-
         public void ChangId()
         {
-            Id = Guid.NewGuid();
+            _broadcastPacket.Id = Guid.NewGuid().ToString();
         }
 
         private CancellationTokenSource _listenCTSource;
@@ -108,7 +109,6 @@ namespace ComInLan
         private void Advertise(object sender, ElapsedEventArgs e)
         {
             _broadcastPacket.Name = Name;
-            _broadcastPacket.Id = Id;
 
             var packetJson = JsonConvert.SerializeObject(_broadcastPacket);
             var sendbuf = Encoding.ASCII.GetBytes(packetJson);

@@ -14,7 +14,7 @@ namespace ComInLanWindows
 
             _server = new ComInLanServer();
             _server.DataReceived += _server_DataReceived;
-            listenAtPort.Text = "Listent at " + _server.ListeningPort;
+            listenAtPort.Text = "Listen at " + _server.ListeningPort;
 
             inputText.Text = Environment.MachineName;
             idText.Text = _server.Id.ToString();

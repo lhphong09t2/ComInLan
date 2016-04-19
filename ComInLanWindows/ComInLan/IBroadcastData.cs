@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ComInLan
 {
-    public interface IClient
+    public interface IBroadcastData
     {
-        string Id { get; }
-        string Name { get; }
+        int ListeningPort { get; }
     }
 }

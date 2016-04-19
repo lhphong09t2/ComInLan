@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace ComInLan
 {
-    interface IServer
+    public interface IClientPacket<T>
     {
-        Guid Id { get; }
-        string DomainId { get; }
-        string Name { get; }   
-        int ListeningPort { get; }
+        string Id { get; }
+        string Name { get; }
+        T Data { get; }
     }
 }

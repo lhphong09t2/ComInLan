@@ -6,7 +6,7 @@ namespace ComInLan
 
     public interface IComInLanServer
     {
-        Guid Id { get; }
+        string Id { get; }
         string Name { get; set; }
         int ListeningPort { get; }
         bool IsRunning { get; }

@@ -23,12 +23,12 @@ public class ComInLanClient implements Runnable, IComInLanClient {
     private Thread _listenerThread;
     private DatagramSocket _listenerSocket;
 
-    List<IServer> _servers;
+    private List<IServerPacket<IBroadcastData>> _servers;
 
     public ComInLanClient(Activity activity)
     {
         _activity = activity;
-        _servers = new ArrayList<IServer>();
+        _servers = new ArrayList<IServerPacket<IBroadcastData>>();
 
         try {
             _listenerSocket = new DatagramSocket(ListenerPort);
@@ -76,7 +76,7 @@ public class ComInLanClient implements Runnable, IComInLanClient {
                 _listenerSocket.receive(receivePacket);
                 String packetJson = new String(receivePacket.getData(), Charset.forName("US-ASCII"));
 
-                final IServer server = parseJsonToServer(packetJson);
+                final IServerPacket<IBroadcastData> server = parseJsonToServer(packetJson);
 
                 if (server.getDomainId().equals("ComInLanServer"))
                 {
@@ -88,16 +88,20 @@ public class ComInLanClient implements Runnable, IComInLanClient {
         }
     }
 
-    private IServer parseJsonToServer(String json)
+    private IServerPacket<IBroadcastData> parseJsonToServer(String json)
     {
-        Server server = new Server();
+        ServerPacket<IBroadcastData> server = new ServerPacket<IBroadcastData>();
         try {
             JSONObject jsonObject = new JSONObject(json);
+
+            JSONObject dataJsonObject = new JSONObject(jsonObject.getString("Data"));
+            BroadcastData broadcastData = new BroadcastData();
+            broadcastData.setListeningPort(dataJsonObject.getInt("ListeningPort"));
 
             server.setId(jsonObject.getString("Id"));
             server.setDomainId(jsonObject.getString("DomainId"));
             server.setName(jsonObject.getString("Name"));
-            server.setListeningPort(jsonObject.getInt("ListeningPort"));
+            server.setData(broadcastData);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -105,11 +109,11 @@ public class ComInLanClient implements Runnable, IComInLanClient {
         return  server;
     }
 
-    private void HandleServerComing(final IServer server)
+    private void HandleServerComing(final IServerPacket server)
     {
-        IServer interServer = null;
+        IServerPacket interServer = null;
 
-        for (IServer object : _servers) {
+        for (IServerPacket object : _servers) {
             if (object.getId().equals(server.getId())) {
                 interServer = object;
             }
