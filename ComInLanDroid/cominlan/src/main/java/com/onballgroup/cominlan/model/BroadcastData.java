@@ -1,9 +1,9 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.model;
 
 /**
  * Created by Phong Le on 4/19/2016.
  */
-class BroadcastData implements IBroadcastData {
+public class BroadcastData implements IBroadcastData {
     private  int _listeningPort;
 
     @Override

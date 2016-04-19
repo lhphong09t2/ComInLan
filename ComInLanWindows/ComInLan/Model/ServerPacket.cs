@@ -1,7 +1,7 @@
 ﻿
-namespace ComInLan
+namespace ComInLan.Model
 {
-	internal class ServerPacket<T> : IServerPacket<T>
+	public class ServerPacket<T> : IServerPacket<T>
 	{
 		public string DomainId { get; set; }
 

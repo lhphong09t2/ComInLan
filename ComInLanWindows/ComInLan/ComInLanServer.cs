@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ComInLan.Model;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.NetworkInformation;

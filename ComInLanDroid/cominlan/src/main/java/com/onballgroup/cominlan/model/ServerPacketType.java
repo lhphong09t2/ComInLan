@@ -1,4 +1,4 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.model;
 
 /**
  * Created by lep on 4/19/2016.

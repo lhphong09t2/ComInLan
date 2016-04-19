@@ -44,19 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BroadcastData.cs" />
-    <Compile Include="ClientPacket.cs" />
+    <Compile Include="Model\BroadcastData.cs" />
+    <Compile Include="Model\ClientPacket.cs" />
     <Compile Include="ComInLanClient.cs" />
     <Compile Include="ComInLanServer.cs" />
-    <Compile Include="IBroadcastData.cs" />
-    <Compile Include="IClientPacket.cs" />
+    <Compile Include="Model\IBroadcastData.cs" />
+    <Compile Include="Model\IClientPacket.cs" />
     <Compile Include="IComInLanClient.cs" />
     <Compile Include="IComInLanServer.cs" />
-    <Compile Include="IServerPacket.cs" />
+    <Compile Include="Model\IServerPacket.cs" />
     <Compile Include="NetworkUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerPacket.cs" />
-    <Compile Include="ServerPacketType.cs" />
+    <Compile Include="Model\ServerPacket.cs" />
+    <Compile Include="Model\ServerPacketType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

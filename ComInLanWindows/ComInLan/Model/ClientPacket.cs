@@ -1,7 +1,7 @@
 ﻿
-namespace ComInLan
+namespace ComInLan.Model
 {
-	internal class ClientPacket<T> : IClientPacket<T>
+	public class ClientPacket<T> : IClientPacket<T>
 	{
 		public string Id { get; set; }
 		public string Name { get; set; }

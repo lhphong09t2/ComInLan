@@ -1,5 +1,8 @@
 package com.onballgroup.cominlan;
 
+import com.onballgroup.cominlan.model.IBroadcastData;
+import com.onballgroup.cominlan.model.IServerPacket;
+
 import java.util.List;
 
 /**

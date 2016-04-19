@@ -2,6 +2,12 @@ package com.onballgroup.cominlan;
 
 import android.app.Activity;
 
+import com.onballgroup.cominlan.model.BroadcastData;
+import com.onballgroup.cominlan.model.IBroadcastData;
+import com.onballgroup.cominlan.model.IServerPacket;
+import com.onballgroup.cominlan.model.ServerPacket;
+import com.onballgroup.cominlan.model.ServerPacketType;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,7 +91,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
             switch (serverPacket.getType())
             {
                 case Broadcast:
-                    handleBroadcastPacketsComing(serverPacket);
+                    handleBroadcastPackets(serverPacket);
                     break;
                 case Data:
                     break;
@@ -98,24 +104,24 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
 
     }
 
-    private void handleBroadcastPacketsComing(final IServerPacket<IBroadcastData> broadcastPackets)
+    private void handleBroadcastPackets(final IServerPacket<IBroadcastData> broadcastPacket)
     {
         IServerPacket<IBroadcastData> interServer = null;
 
         for (IServerPacket<IBroadcastData> object : _broadcastPackets) {
-            if (object.getId().equals(broadcastPackets.getId())) {
+            if (object.getId().equals(broadcastPacket.getId())) {
                 interServer = object;
             }
         }
 
         if (interServer == null)
         {
-            _broadcastPackets.add(broadcastPackets);
+            _broadcastPackets.add(broadcastPacket);
 
             _activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    _onComInClientListener.onServerNewFound(broadcastPackets);
+                    _onComInClientListener.onServerNewFound(broadcastPacket);
                     _onComInClientListener.onServersChanged(_broadcastPackets);
                 }
             });
@@ -123,12 +129,12 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
         else
         {
             _broadcastPackets.remove(interServer);
-            _broadcastPackets.add(broadcastPackets);
+            _broadcastPackets.add(broadcastPacket);
 
             _activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    _onComInClientListener.onServerChanged(broadcastPackets);
+                    _onComInClientListener.onServerChanged(broadcastPacket);
                     _onComInClientListener.onServersChanged(_broadcastPackets);
                 }
             });

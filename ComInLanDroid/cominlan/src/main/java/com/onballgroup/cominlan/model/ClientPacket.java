@@ -1,9 +1,9 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.model;
 
 /**
  * Created by Phong Le on 4/18/2016.
  */
-class ClientPacket<T> implements IClientPacket<T> {
+public class ClientPacket<T> implements IClientPacket<T> {
     private String _id;
     private String _name;
     private T _data;

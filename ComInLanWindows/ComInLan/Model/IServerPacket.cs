@@ -1,5 +1,5 @@
 ﻿
-namespace ComInLan
+namespace ComInLan.Model
 {
 	public interface IServerPacket<T>
 	{

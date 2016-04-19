@@ -1,9 +1,9 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.model;
 
 /**
  * Created by Phong Le on 4/17/2016.
  */
-class ServerPacket<T> implements IServerPacket<T> {
+public class ServerPacket<T> implements IServerPacket<T> {
     private String _id;
     private String _domainId;
     private String _name;
