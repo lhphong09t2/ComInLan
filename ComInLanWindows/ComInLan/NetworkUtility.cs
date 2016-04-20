@@ -60,8 +60,8 @@ namespace ComInLan
 			//TODO write code to handle this one
 		}
 
-		protected abstract void OnUdpDataReceived(string dataJson);
-		protected abstract void OnTcpDataReceived(string dataJson);
+		protected abstract void OnUdpDataReceived(string dataJson, IPAddress address);
+		protected abstract void OnTcpDataReceived(string dataJson, IPAddress address);
 
 		private CancellationTokenSource _listenCTSource;
 		private Task ListenUdp()
@@ -74,7 +74,11 @@ namespace ComInLan
 				while (!cancellationToken.IsCancellationRequested)
 				{
 					var bytes = _udpClient.Receive(ref _groupEP);
-					OnUdpDataReceived(Encoding.UTF8.GetString(bytes));
+
+					Task.Factory.StartNew(delegate
+					{
+						OnUdpDataReceived(Encoding.UTF8.GetString(bytes), _groupEP.Address);
+					});
 				}
 
 			}, cancellationToken);

@@ -89,11 +89,11 @@ namespace ComInLan
 				}
 		}
 
-		protected override void OnUdpDataReceived(string dataJson)
+		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{
 		}
 
-		protected override void OnTcpDataReceived(string dataJson)
+		protected override void OnTcpDataReceived(string dataJson, IPAddress address)
 		{
 		}
 	}

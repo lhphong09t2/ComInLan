@@ -48,10 +48,16 @@ public abstract class NetworkUtility {
 
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                        final DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                         _udpListenerSocket.receive(receivePacket);
-                        String dataJson = new String(receivePacket.getData(), 0, receivePacket.getLength(), Charset.forName("UTF-8"));
-                        onUdpDataReceived(dataJson, receivePacket.getAddress());
+                        final String dataJson = new String(receivePacket.getData(), 0, receivePacket.getLength(), Charset.forName("UTF-8"));
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                onUdpDataReceived(dataJson, receivePacket.getAddress());
+                            }
+                        }).start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
