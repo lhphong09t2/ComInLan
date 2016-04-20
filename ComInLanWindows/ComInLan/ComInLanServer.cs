@@ -1,11 +1,10 @@
 ﻿using ComInLan.Model;
+using ComInLan.Model.Packet;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -15,7 +14,6 @@ namespace ComInLan
 	{
 		public const int BroadcastPort = 55176;
 		public const int AdvertisingPeriod = 5000;
-
 
 		public string Id { get { return _broadcastPacket.Id; } }
 
@@ -93,6 +91,7 @@ namespace ComInLan
 
 		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{
+
 		}
 
 		protected override void OnTcpDataReceived(string dataJson, IPAddress address)

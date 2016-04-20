@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComInLan.Model
+namespace ComInLan.Model.Protocol
 {
-	public class BroadcastData : BaseModel, IBroadcastData
+	public class ServerProtocol : IServerProtocol
 	{
-		public int ListeningPort { get; set; }
 	}
 }

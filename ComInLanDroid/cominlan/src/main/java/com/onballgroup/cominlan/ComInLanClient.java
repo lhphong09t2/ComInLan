@@ -5,10 +5,11 @@ import android.app.Activity;
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.IBroadcastData;
 import com.onballgroup.cominlan.model.IServer;
-import com.onballgroup.cominlan.model.IServerPacket;
+import com.onballgroup.cominlan.model.packet.IServerPacket;
+import com.onballgroup.cominlan.model.protocol.IServerProtocol;
 import com.onballgroup.cominlan.model.Server;
-import com.onballgroup.cominlan.model.ServerPacket;
-import com.onballgroup.cominlan.model.ServerPacketType;
+import com.onballgroup.cominlan.model.packet.ServerPacket;
+import com.onballgroup.cominlan.model.packet.ServerPacketType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,6 +103,9 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                 case Broadcast:
                     handleBroadcastPackets(serverPacket, address);
                     break;
+                case Protocol:
+                    handleProtocol(serverPacket);
+                    break;
                 case Data:
                     break;
             }
@@ -153,6 +157,11 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                 temp.refreshTime();
             }
         }
+    }
+
+    private void handleProtocol(final IServerPacket<IServerProtocol> protocolPacket)
+    {
+
     }
 
     private IServerPacket parseJsonToServer(String json) {

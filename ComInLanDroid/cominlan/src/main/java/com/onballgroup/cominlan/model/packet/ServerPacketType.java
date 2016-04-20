@@ -1,4 +1,4 @@
-package com.onballgroup.cominlan.model;
+package com.onballgroup.cominlan.model.packet;
 
 /**
  * Created by lep on 4/19/2016.
@@ -6,5 +6,6 @@ package com.onballgroup.cominlan.model;
 public enum ServerPacketType
 {
     Broadcast,
+    Protocol,
     Data
 }

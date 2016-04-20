@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComInLan.Model
+namespace ComInLan.Model.Packet
 {
-	public class BroadcastData : BaseModel, IBroadcastData
+	public interface IClientPacket<T>
 	{
-		public int ListeningPort { get; set; }
+		string Id { get; }
+		string Name { get; }
+		T Data { get; }
 	}
 }
