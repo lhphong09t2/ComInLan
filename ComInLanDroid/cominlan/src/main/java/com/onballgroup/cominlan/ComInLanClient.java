@@ -58,6 +58,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
             public void run() {
                 long currentTime = System.currentTimeMillis();
                 Iterator<IServer> it = _servers.iterator();
+
                 while (it.hasNext())
                 {
                     IServer server = it.next();
@@ -65,14 +66,14 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                     {
                         it.remove();
                     }
-
-                    _activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            _onComInClientListener.onServersChanged(_servers);
-                        }
-                    });
                 }
+
+                _activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _onComInClientListener.onServersChanged(_servers);
+                    }
+                });
             }
         }, 10000, 10000);
     }
