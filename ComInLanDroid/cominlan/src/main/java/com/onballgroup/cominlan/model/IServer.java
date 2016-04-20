@@ -11,4 +11,5 @@ public interface IServer {
     InetAddress getAddress();
     int getPort();
     String getChecksum();
+    long getRefreshTime();
 }

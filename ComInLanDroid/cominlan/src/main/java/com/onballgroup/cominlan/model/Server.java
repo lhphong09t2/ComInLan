@@ -11,6 +11,12 @@ public class Server extends BaseModel implements IServer {
     private InetAddress _address;
     private int _port;
     private String _checksum;
+    private long _refreshTime;
+
+    public Server()
+    {
+        refreshTime();
+    }
 
     @Override
     public String getId() {
@@ -53,8 +59,18 @@ public class Server extends BaseModel implements IServer {
         return _checksum;
     }
 
+    @Override
+    public long getRefreshTime() {
+        return _refreshTime;
+    }
+
     public void calculateChecksum()
     {
         _checksum = calculateChecksum(_id + _name + _address + _port);
+    }
+
+    public void refreshTime()
+    {
+        _refreshTime = System.currentTimeMillis();
     }
 }

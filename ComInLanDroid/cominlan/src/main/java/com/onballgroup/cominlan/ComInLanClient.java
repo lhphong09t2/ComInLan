@@ -15,7 +15,10 @@ import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Phong Le on 4/17/2016.
@@ -27,15 +30,18 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
 
     private List<IServer> _servers;
 
+    private Timer _serverCleanupTimer;
+
     public ComInLanClient(Activity activity) {
         _activity = activity;
         _servers = new ArrayList<IServer>();
 
         initUdp();
+
+        _serverCleanupTimer = new Timer();
     }
 
     private boolean _isRunning = false;
-
     public boolean isRunning() {
         return _isRunning;
     }
@@ -46,12 +52,37 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
     public void start() {
         startUdp(UdpListenerPort);
         _isRunning = true;
+
+        _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
+                Iterator<IServer> it = _servers.iterator();
+                while (it.hasNext())
+                {
+                    IServer server = it.next();
+                    if (currentTime - server.getRefreshTime() > 10000)
+                    {
+                        it.remove();
+                    }
+
+                    _activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            _onComInClientListener.onServersChanged(_servers);
+                        }
+                    });
+                }
+            }
+        }, 10000, 10000);
     }
 
     @Override
     public void stop() {
         stopUdp();
         _isRunning = false;
+
+        _serverCleanupTimer.cancel();
     }
 
     @Override
@@ -116,6 +147,9 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                     _onComInClientListener.onServersChanged(_servers);
                 }
             });
+        } else
+        {
+            temp.refreshTime();
         }
     }
 

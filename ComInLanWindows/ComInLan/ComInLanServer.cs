@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -70,7 +71,7 @@ namespace ComInLan
 		{
 			_broadcastPacket.Id = Guid.NewGuid().ToString();
 		}
-		
+
 		private void Advertise(object sender, ElapsedEventArgs e)
 		{
 			_broadcastPacket.Name = Name;
