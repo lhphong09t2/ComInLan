@@ -24,7 +24,8 @@ public abstract class NetworkUtility {
         }
     }
 
-    protected void sendUdp(byte[] data, InetAddress address, int port) {
+    protected void sendUdp(String dataJson, InetAddress address, int port) {
+        byte[] data = dataJson.getBytes(Charset.forName("UTF-8"));
         DatagramPacket packet = new DatagramPacket(
                 data, data.length, address, port);
         try {
@@ -90,6 +91,5 @@ public abstract class NetworkUtility {
     }
 
     protected abstract void onUdpDataReceived(String dataJson, InetAddress address);
-
     protected abstract void onTcpDataReceived(String dataJson, InetAddress address);
 }

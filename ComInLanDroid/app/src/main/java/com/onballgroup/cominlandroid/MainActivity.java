@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnComInLanListene
             output += server.getId() + " "
                     + server.getName() + " "
                     + server.getAddress() + " "
-                    + server.getPort();
+                    + server.getPort() + "\n";
         }
 
         _resultView.setText(output);

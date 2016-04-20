@@ -25,6 +25,7 @@ import java.util.TimerTask;
  */
 public class ComInLanClient extends NetworkUtility implements IComInLanClient {
     public final int UdpListenerPort = 55176;
+    public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
 
@@ -42,6 +43,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
     }
 
     private boolean _isRunning = false;
+
     public boolean isRunning() {
         return _isRunning;
     }
@@ -59,12 +61,12 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                 long currentTime = System.currentTimeMillis();
                 Iterator<IServer> it = _servers.iterator();
 
-                while (it.hasNext())
-                {
-                    IServer server = it.next();
-                    if (currentTime - server.getRefreshTime() > 10000)
-                    {
-                        it.remove();
+                synchronized (_servers) {
+                    while (it.hasNext()) {
+                        IServer server = it.next();
+                        if (currentTime - server.getRefreshTime() > ServerCleanupPeriod) {
+                            it.remove();
+                        }
                     }
                 }
 
@@ -75,7 +77,7 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
                     }
                 });
             }
-        }, 10000, 10000);
+        }, ServerCleanupPeriod, ServerCleanupPeriod);
     }
 
     @Override
@@ -126,31 +128,30 @@ public class ComInLanClient extends NetworkUtility implements IComInLanClient {
             }
         }
 
-        if (temp == null) {
-            _servers.add(server);
-            _activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    _onComInClientListener.onServerNewFound(server);
-                    _onComInClientListener.onServersChanged(_servers);
-                }
-            });
-        }
-        else if(!temp.getChecksum().equals(server.getChecksum()))
-        {
-            _servers.remove(temp);
-            _servers.add(server);
+        synchronized (_servers) {
+            if (temp == null) {
+                _servers.add(server);
+                _activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _onComInClientListener.onServerNewFound(server);
+                        _onComInClientListener.onServersChanged(_servers);
+                    }
+                });
+            } else if (!temp.getChecksum().equals(server.getChecksum())) {
+                _servers.remove(temp);
+                _servers.add(server);
 
-            _activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    _onComInClientListener.onServerChanged(server);
-                    _onComInClientListener.onServersChanged(_servers);
-                }
-            });
-        } else
-        {
-            temp.refreshTime();
+                _activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _onComInClientListener.onServerChanged(server);
+                        _onComInClientListener.onServersChanged(_servers);
+                    }
+                });
+            } else {
+                temp.refreshTime();
+            }
         }
     }
 

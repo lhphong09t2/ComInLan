@@ -14,6 +14,8 @@ namespace ComInLan
 	public class ComInLanServer : NetworkUtility, IComInLanServer
 	{
 		public const int BroadcastPort = 55176;
+		public const int AdvertisingPeriod = 5000;
+
 
 		public string Id { get { return _broadcastPacket.Id; } }
 
@@ -43,7 +45,7 @@ namespace ComInLan
 				Type = ServerPacketType.Broadcast
 			};
 
-			_advertisingTimer = new Timer(5000)
+			_advertisingTimer = new Timer(AdvertisingPeriod)
 			{
 				AutoReset = true,
 			};
