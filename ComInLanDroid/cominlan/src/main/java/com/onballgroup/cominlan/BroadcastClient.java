@@ -29,9 +29,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
-
     private List<IServer> _servers;
-
     private Timer _serverCleanupTimer;
 
     public BroadcastClient(Activity activity) {
@@ -44,12 +42,16 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     private boolean _isRunning = false;
-
     public boolean isRunning() {
         return _isRunning;
     }
 
-    private OnComInLanListener _onComInClientListener;
+    private int _listeningPort;
+
+    @Override
+    public int getListeningPort() {
+        return _listeningPort;
+    }
 
     public void start() {
         int index = 0;
@@ -64,6 +66,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
         if (index < 4)
         {
+            _listeningPort = UdpListenerPort[index];
             _isRunning = true;
 
             _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
@@ -99,6 +102,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         _serverCleanupTimer.cancel();
     }
 
+    private OnComInLanListener _onComInClientListener;
     public void setOnComInClientListener(OnComInLanListener listener) {
         _onComInClientListener = listener;
     }

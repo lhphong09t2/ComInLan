@@ -8,5 +8,7 @@ namespace ComInLan.Model.Protocol
 {
 	public interface IClientProtocol
 	{
+		ClientCommand Command { get; }
+		Object Data { get; }
 	}
 }

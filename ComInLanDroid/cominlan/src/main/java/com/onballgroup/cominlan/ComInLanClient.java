@@ -10,6 +10,11 @@ import com.onballgroup.cominlan.model.protocol.IServerProtocol;
  */
 public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
+    @Override
+    public String getDomainId() {
+        return "ComInLan";
+    }
+
     public ComInLanClient(Activity activity) {
         super(activity);
     }
@@ -25,8 +30,18 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    public String getDomainId() {
-        return "ComInLan";
+    public boolean connect(IServer server) {
+        return false;
+    }
+
+    @Override
+    public void disconnect(IServer server) {
+
+    }
+
+    @Override
+    public void sendData(String jsonData) {
+
     }
 }
 

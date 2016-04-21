@@ -5,6 +5,7 @@ package com.onballgroup.cominlan;
  */
 public interface IBroadcastClient {
     String getDomainId();
+    int getListeningPort();
     void start();
     void stop();
     void setOnComInClientListener(OnComInLanListener listener);
