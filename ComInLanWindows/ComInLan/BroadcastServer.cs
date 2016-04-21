@@ -2,6 +2,7 @@
 using ComInLan.Model.Packet;
 using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Timers;
@@ -11,7 +12,7 @@ namespace ComInLan
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
 	{
-		public const int BroadcastPort = 55176;
+		public const int ClientUdpPort = 55176;
 		public const int AdvertisingPeriod = 5000;
 
 		public string Id { get { return _broadcastPacket.Id; } }
@@ -73,6 +74,11 @@ namespace ComInLan
 			_broadcastPacket.Id = Guid.NewGuid().ToString();
 		}
 
+		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
+		{
+
+		}
+
 		private void Advertise(object sender, ElapsedEventArgs e)
 		{
 			_broadcastPacket.Name = Name;
@@ -85,7 +91,7 @@ namespace ComInLan
 					if (ua.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
 						var address = GetBroadcastAddress(ua);
-						SendUdp(packetJson, address, BroadcastPort);
+						SendUdp(packetJson, address, ClientUdpPort);
 					}
 				}
 		}

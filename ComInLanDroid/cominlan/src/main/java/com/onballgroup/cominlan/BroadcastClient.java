@@ -103,7 +103,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     handleProtocolPacket(serverPacket);
                     break;
                 case Data:
-                    handbleDatapacket(serverPacket);
+                    handleDatapacket(serverPacket);
                     break;
             }
         }
@@ -165,7 +165,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     }
 
-    private void handbleDatapacket(IServerPacket dataPacket)
+    private void handleDatapacket(IServerPacket dataPacket)
     {
 
     }

@@ -23,15 +23,6 @@ namespace ComInLan
 		public ComInLanServer()
 		{
 
-		}
-
-		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
-		{
-
-		}
-
-		protected override void OnTcpDataReceived(string dataJson, IPAddress address)
-		{
-		}
+		}		
 	}
 }

@@ -61,7 +61,7 @@ namespace ComInLan
 		}
 
 		protected abstract void OnUdpDataReceived(string dataJson, IPAddress address);
-		protected abstract void OnTcpDataReceived(string dataJson, IPAddress address);
+		//protected abstract void OnTcpDataReceived(string dataJson, IPAddress address);
 
 		private CancellationTokenSource _listenCTSource;
 		private Task ListenUdp()
