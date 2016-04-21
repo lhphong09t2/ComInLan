@@ -10,9 +10,4 @@ public class ComInLanServer extends NetworkUtility implements IComInLanServer {
     protected void onUdpDataReceived(String dataJson, InetAddress address) {
 
     }
-
-    @Override
-    protected void onTcpDataReceived(String dataJson, InetAddress address) {
-
-    }
 }

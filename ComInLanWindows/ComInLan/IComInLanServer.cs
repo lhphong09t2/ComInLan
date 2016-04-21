@@ -1,21 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ComInLan
 {
-	public delegate void ComInLanServerHandler(object sender, string dataJson);
-
-	public interface IComInLanServer
+	public interface IComInLanServer : IBroadcastServer
 	{
-		string Id { get; }
-		string Name { get; set; }
-		int ListeningPort { get; }
-		bool IsRunning { get; }
 
-		event ComInLanServerHandler DataReceived;
-
-		void Start();
-		void Stop();
-
-		void ChangId();
 	}
 }

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BroadcastServer.cs" />
+    <Compile Include="IComInLanServer.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\BroadcastData.cs" />
     <Compile Include="Model\Client.cs" />
@@ -56,7 +58,7 @@
     <Compile Include="Model\IBroadcastData.cs" />
     <Compile Include="Model\Packet\IClientPacket.cs" />
     <Compile Include="IComInLanClient.cs" />
-    <Compile Include="IComInLanServer.cs" />
+    <Compile Include="IBroadcastServer.cs" />
     <Compile Include="Model\IClient.cs" />
     <Compile Include="Model\Protocol\IClientProtocol.cs" />
     <Compile Include="Model\IServer.cs" />
