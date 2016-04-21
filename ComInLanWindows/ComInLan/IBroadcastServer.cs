@@ -12,8 +12,6 @@ namespace ComInLan
 		int ListeningPort { get; }
 		bool IsRunning { get; }
 
-		event BroadcastServerHandler DataReceived;
-
 		void Start();
 		void Stop();
 

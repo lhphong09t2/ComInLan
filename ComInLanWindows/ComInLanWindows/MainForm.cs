@@ -13,16 +13,10 @@ namespace ComInLanWindows
 			InitializeComponent();
 
 			_server = new ComInLanServer();
-			_server.DataReceived += _server_DataReceived;
 			listenAtPort.Text = "Listen at " + _server.ListeningPort;
 
 			inputText.Text = Environment.MachineName;
 			idText.Text = _server.Id.ToString();
-		}
-
-		private void _server_DataReceived(object sender, string dataJson)
-		{
-			outputText.Text = dataJson;
 		}
 
 		private void startButton_Click(object sender, EventArgs e)

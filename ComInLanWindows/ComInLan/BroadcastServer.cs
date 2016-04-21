@@ -25,8 +25,6 @@ namespace ComInLan
 
 		public abstract string DomainId { get; }
 
-		public event BroadcastServerHandler DataReceived;
-
 		private Timer _advertisingTimer;
 		private ServerPacket<IBroadcastData> _broadcastPacket;
 

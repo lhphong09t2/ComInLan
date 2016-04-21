@@ -8,5 +8,6 @@ namespace ComInLan.Model
 {
 	public class Client : IClient
 	{
+
 	}
 }
