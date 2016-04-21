@@ -35,11 +35,12 @@ public abstract class NetworkUtility {
         }
     }
 
-    protected void startUdp(int udpListeningPort) {
+    protected boolean startUdp(int udpListeningPort) {
         try {
             _udpListenerSocket = new DatagramSocket(udpListeningPort);
         } catch (SocketException e) {
             e.printStackTrace();
+            return false;
         }
 
         _udpListenerThread = new Thread(new Runnable() {
@@ -67,6 +68,7 @@ public abstract class NetworkUtility {
         });
 
         _udpListenerThread.start();
+        return  true;
     }
 
     protected void stopUdp() {

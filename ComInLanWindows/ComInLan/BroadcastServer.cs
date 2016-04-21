@@ -12,7 +12,7 @@ namespace ComInLan
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
 	{
-		public const int ClientUdpPort = 55176;
+		public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
 		public const int AdvertisingPeriod = 5000;
 
 		public string Id { get { return _broadcastPacket.Id; } }
@@ -83,13 +83,17 @@ namespace ComInLan
 
 			var packetJson = JsonConvert.SerializeObject(_broadcastPacket);
 
-			foreach (var i in NetworkInterface.GetAllNetworkInterfaces())
-				foreach (var ua in i.GetIPProperties().UnicastAddresses)
+			foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
+				foreach (var ua in networkInterface.GetIPProperties().UnicastAddresses)
 				{
 					if (ua.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
 						var address = GetBroadcastAddress(ua);
-						SendUdp(packetJson, address, ClientUdpPort);
+
+						foreach (var port in ClientUdpPort)
+						{
+							SendUdp(packetJson, address, port);
+						}
 					}
 				}
 		}

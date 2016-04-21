@@ -26,12 +26,20 @@ namespace ComInLan
 			_udpSocket.SendTo(Encoding.UTF8.GetBytes(dataJson), new IPEndPoint(address, port));
 		}
 
-		protected void StartUdp(int udpListeningPort)
+		protected bool StartUdp(int udpListeningPort)
 		{
-			_udpClient = new UdpClient(udpListeningPort);
-			_groupEP = new IPEndPoint(IPAddress.Any, udpListeningPort);
+			try
+			{
+				_udpClient = new UdpClient(udpListeningPort);
+				_groupEP = new IPEndPoint(IPAddress.Any, udpListeningPort);
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
 
 			ListenUdp();
+			return true;
 		}
 
 		protected void StopUdp()

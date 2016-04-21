@@ -25,7 +25,7 @@ import java.util.TimerTask;
  * Created by Phong Le on 4/21/2016.
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
-    public final int UdpListenerPort = 55176;
+    public final int[] UdpListenerPort = { 55176, 23435, 34523, 45349 };
     public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
@@ -52,32 +52,44 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     private OnComInLanListener _onComInClientListener;
 
     public void start() {
-        startUdp(UdpListenerPort);
-        _isRunning = true;
+        int index = 0;
+        while (!startUdp(UdpListenerPort[index]))
+        {
+            index++;
+            if(index >= 4)
+            {
+                break;
+            }
+        }
 
-        _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                long currentTime = System.currentTimeMillis();
-                Iterator<IServer> it = _servers.iterator();
+        if (index < 4)
+        {
+            _isRunning = true;
 
-                synchronized (_servers) {
-                    while (it.hasNext()) {
-                        IServer server = it.next();
-                        if (currentTime - server.getRefreshTime() > ServerCleanupPeriod) {
-                            it.remove();
+            _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    long currentTime = System.currentTimeMillis();
+                    Iterator<IServer> it = _servers.iterator();
+
+                    synchronized (_servers) {
+                        while (it.hasNext()) {
+                            IServer server = it.next();
+                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod) {
+                                it.remove();
+                            }
                         }
                     }
-                }
 
-                _activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        _onComInClientListener.onServersChanged(_servers);
-                    }
-                });
-            }
-        }, ServerCleanupPeriod, ServerCleanupPeriod);
+                    _activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            _onComInClientListener.onServersChanged(_servers);
+                        }
+                    });
+                }
+            }, ServerCleanupPeriod, ServerCleanupPeriod);
+        }
     }
 
     public void stop() {
