@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace ComInLan
+namespace ComInLan.Server
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
 	{

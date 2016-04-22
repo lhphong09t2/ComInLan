@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.onballgroup.cominlan.ComInLanClient;
-import com.onballgroup.cominlan.OnBroadcastClientListener;
+import com.onballgroup.cominlan.client.ComInLanClient;
+import com.onballgroup.cominlan.client.OnBroadcastClientListener;
 import com.onballgroup.cominlan.model.IServer;
 
 import java.util.List;

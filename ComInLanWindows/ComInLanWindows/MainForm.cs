@@ -1,4 +1,4 @@
-﻿using ComInLan;
+﻿using ComInLan.Server;
 using System;
 using System.Windows.Forms;
 

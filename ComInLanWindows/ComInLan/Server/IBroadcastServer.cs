@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace ComInLan
+namespace ComInLan.Server
 {
-	public delegate void BroadcastServerHandler(object sender, string dataJson);
-
 	public interface IBroadcastServer
 	{
 		string Id { get; }

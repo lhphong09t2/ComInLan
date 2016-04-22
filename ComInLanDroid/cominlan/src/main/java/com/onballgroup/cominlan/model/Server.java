@@ -20,12 +20,12 @@ public class Server extends BaseModel implements IServer {
 
     public Server()
     {
-        refreshTime();
+        refresh();
     }
 
     public Server(JSONObject jsonObject) {
         super(jsonObject);
-        refreshTime();
+        refresh();
     }
 
     @Override
@@ -79,9 +79,9 @@ public class Server extends BaseModel implements IServer {
         _checksum = calculateChecksum(_id + _name + _address + _port);
     }
 
-    public void refreshTime()
+    public void refresh()
     {
-        _refreshTime = System.currentTimeMillis();
+        _refreshTime = System.currentTimeMillis()/1000;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.client;
 
 /**
  * Created by Phong Le on 4/21/2016.

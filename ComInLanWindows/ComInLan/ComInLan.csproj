@@ -44,22 +44,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BroadcastServer.cs" />
-    <Compile Include="IComInLanServer.cs" />
+    <Compile Include="Client\BroadcastClient.cs" />
+    <Compile Include="Client\IBroadcastClient.cs" />
+    <Compile Include="Server\BroadcastServer.cs" />
+    <Compile Include="Server\IComInLanServer.cs" />
     <Compile Include="Model\Base\BaseModel.cs" />
     <Compile Include="Model\Base\IBaseModel.cs" />
     <Compile Include="Model\BroadcastData.cs" />
     <Compile Include="Model\Client.cs" />
     <Compile Include="Model\Packet\ClientPacket.cs" />
-    <Compile Include="ComInLanClient.cs" />
-    <Compile Include="ComInLanServer.cs" />
+    <Compile Include="Client\ComInLanClient.cs" />
+    <Compile Include="Server\ComInLanServer.cs" />
     <Compile Include="Model\Packet\ClientPacketType.cs" />
     <Compile Include="Model\Protocol\ClientCommand.cs" />
     <Compile Include="Model\Protocol\ClientProtocol.cs" />
     <Compile Include="Model\IBroadcastData.cs" />
     <Compile Include="Model\Packet\IClientPacket.cs" />
-    <Compile Include="IComInLanClient.cs" />
-    <Compile Include="IBroadcastServer.cs" />
+    <Compile Include="Client\IComInLanClient.cs" />
+    <Compile Include="Server\IBroadcastServer.cs" />
     <Compile Include="Model\IClient.cs" />
     <Compile Include="Model\Protocol\IClientProtocol.cs" />
     <Compile Include="Model\IServer.cs" />

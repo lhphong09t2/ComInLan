@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace ComInLan
+namespace ComInLan.Client
 {
-	public class ComInLanClient : NetworkUtility, IComInLanClient
+	public class ComInLanClient : BroadcastClient, IComInLanClient
 	{
 		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{

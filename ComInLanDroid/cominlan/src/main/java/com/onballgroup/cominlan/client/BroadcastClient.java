@@ -1,7 +1,8 @@
-package com.onballgroup.cominlan;
+package com.onballgroup.cominlan.client;
 
 import android.app.Activity;
 
+import com.onballgroup.cominlan.NetworkUtility;
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.IBroadcastData;
 import com.onballgroup.cominlan.model.IServer;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
     public final int[] UdpListenerPort = { 55176, 23435, 34523, 45349 };
-    public final int ServerCleanupPeriod = 6000;
+    public final int ServerCleanupPeriod = 6;
 
     private Activity _activity;
     private List<IServer> _servers;
@@ -163,7 +164,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 temp.setAddress(address);
                 temp.setPort(broadcastPacket.getData().getListeningPort());
                 temp.calculateChecksum();
-                temp.refreshTime();
+                temp.refresh();
 
                 final Server temp2 = temp;
 
@@ -175,7 +176,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     }
                 });
             } else {
-                temp.refreshTime();
+                temp.refresh();
             }
         }
     }
