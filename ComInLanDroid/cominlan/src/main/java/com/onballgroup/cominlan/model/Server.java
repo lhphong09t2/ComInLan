@@ -17,9 +17,9 @@ public class Server extends BaseModel implements IServer {
     private int _port;
     private String _checksum;
     private long _refreshTime;
+    private boolean _isConnected;
 
-    public Server()
-    {
+    public Server() {
         refresh();
     }
 
@@ -74,14 +74,21 @@ public class Server extends BaseModel implements IServer {
         return _refreshTime;
     }
 
-    public void calculateChecksum()
-    {
+    @Override
+    public boolean isConnected() {
+        return _isConnected;
+    }
+
+    public void setConnected(boolean value) {
+        _isConnected = value;
+    }
+
+    public void calculateChecksum() {
         _checksum = calculateChecksum(_id + _name + _address + _port);
     }
 
-    public void refresh()
-    {
-        _refreshTime = System.currentTimeMillis()/1000;
+    public void refresh() {
+        _refreshTime = System.currentTimeMillis() / 1000;
     }
 
     @Override

@@ -53,6 +53,11 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         return _listeningPort;
     }
 
+    @Override
+    public List<IServer> getServers() {
+        return _servers;
+    }
+
     public void start() {
         int index = 0;
         while (!startUdp(UdpListenerPort[index]))
@@ -72,16 +77,24 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    long currentTime = System.currentTimeMillis();
+                    long currentTime = System.currentTimeMillis()/1000;
                     Iterator<IServer> it = _servers.iterator();
 
                     boolean hasChange = false;
 
                     synchronized (_servers) {
                         while (it.hasNext()) {
-                            IServer server = it.next();
+                            final IServer server = it.next();
                             if (currentTime - server.getRefreshTime() > ServerCleanupPeriod/1000) {
                                 it.remove();
+
+                                _activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        _onBroadcastClientListener.onServerRemoved(server);
+                                    }
+                                });
+
                                 hasChange = true;
                             }
                         }
@@ -92,7 +105,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                         _activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                _onBroadcastClientListener.onServersChanged(_servers);
+                            _onBroadcastClientListener.onServersChanged(_servers);
                             }
                         });
                     }

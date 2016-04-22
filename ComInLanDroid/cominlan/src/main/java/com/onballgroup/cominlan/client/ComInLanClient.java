@@ -31,7 +31,8 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    public boolean connect(IServer server) {
+    public boolean connect(IServer server)
+    {
         return false;
     }
 

@@ -10,5 +10,6 @@ import java.util.List;
 public interface OnBroadcastClientListener {
     void onServerNewFound(IServer server);
     void onServerChanged(IServer server);
+    void onServerRemoved(IServer server);
     void onServersChanged(List<IServer> servers);
 }

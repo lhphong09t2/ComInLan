@@ -8,5 +8,8 @@ namespace ComInLan.Model.Protocol
 {
 	public enum ServerCommand
 	{
+		RequestPasscode,
+		Refuse,
+		Accept
 	}
 }

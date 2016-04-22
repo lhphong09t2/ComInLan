@@ -3,8 +3,10 @@ package com.onballgroup.cominlandroid;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.onballgroup.cominlan.client.ComInLanClient;
 import com.onballgroup.cominlan.client.OnBroadcastClientListener;
@@ -12,9 +14,15 @@ import com.onballgroup.cominlan.model.IServer;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnBroadcastClientListener {
+public class MainActivity extends AppCompatActivity implements OnBroadcastClientListener,
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener
+{
 
-    private TextView _resultView;
+    private ListView _serverListView;
+    private ServerAdapter _arrayAdapter;
+
+    private EditText _dataEditText;
+
     private ComInLanClient _comInLanClient;
 
     @Override
@@ -22,10 +30,16 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _resultView = (TextView) findViewById(R.id.result);
+        _serverListView = (ListView) findViewById(R.id.serverListView);
+        _dataEditText =  (EditText) findViewById(R.id.dataEditText);
 
         _comInLanClient = new ComInLanClient(this);
         _comInLanClient.setOnComInClientListener(this);
+
+        _arrayAdapter = new ServerAdapter(this, 0, _comInLanClient.getServers());
+        _serverListView.setAdapter(_arrayAdapter);
+        _serverListView.setOnItemClickListener(this);
+        _serverListView.setOnItemLongClickListener(this);
     }
 
     public void startButtonClick(View v) {
@@ -40,13 +54,16 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         }
     }
 
-    private void showText(final String text) {
+    public void sendButtonClick(View v) {
+
     }
 
+    private void showText(final String text) {
+
+    }
 
     @Override
     public void onServerNewFound(IServer server) {
-
     }
 
     @Override
@@ -55,16 +72,24 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     }
 
     @Override
+    public void onServerRemoved(IServer server) {
+    }
+
+    @Override
     public void onServersChanged(List<IServer> servers) {
-        String output = "";
+        _arrayAdapter.notifyDataSetChanged();
+    }
 
-        for (IServer server : servers) {
-            output += server.getId() + " "
-                    + server.getName() + " "
-                    + server.getAddress() + " "
-                    + server.getPort() + "\n";
-        }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        IServer server = _arrayAdapter.getItem(position);
+        _comInLanClient.connect(server);
+    }
 
-        _resultView.setText(output);
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+        return true;
     }
 }

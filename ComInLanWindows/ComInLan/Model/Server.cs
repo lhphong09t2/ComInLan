@@ -27,6 +27,8 @@ namespace ComInLan.Model
 
 		public long RefreshTime { get; set; }
 
+		public bool IsConnected { get; set; }
+
 		public void Refresh()
 		{
 			RefreshTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;

@@ -14,4 +14,5 @@ public interface IServer extends IBaseModel {
     int getPort();
     String getChecksum();
     long getRefreshTime();
+    boolean isConnected();
 }

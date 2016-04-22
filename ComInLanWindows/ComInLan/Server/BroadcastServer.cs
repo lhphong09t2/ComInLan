@@ -1,4 +1,5 @@
 ﻿using ComInLan.Model;
+using ComInLan.Model.Base;
 using ComInLan.Model.Packet;
 using Newtonsoft.Json;
 using System;
@@ -78,7 +79,7 @@ namespace ComInLan.Server
 
 		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{
-
+			var clientPacket = JsonConvert.DeserializeObject<ClientPacket<object>>(dataJson);
 		}
 
 		private void Advertise()
