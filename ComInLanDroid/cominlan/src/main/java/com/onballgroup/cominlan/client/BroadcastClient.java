@@ -26,7 +26,7 @@ import java.util.TimerTask;
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
     public final int[] UdpListenerPort = { 55176, 23435, 34523, 45349 };
-    public final int ServerCleanupPeriod = 6;
+    public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
     private List<IServer> _servers;
@@ -75,21 +75,27 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     long currentTime = System.currentTimeMillis();
                     Iterator<IServer> it = _servers.iterator();
 
+                    boolean hasChange = false;
+
                     synchronized (_servers) {
                         while (it.hasNext()) {
                             IServer server = it.next();
-                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod) {
+                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod/1000) {
                                 it.remove();
+                                hasChange = true;
                             }
                         }
                     }
 
-                    _activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            _onBroadcastClientListener.onServersChanged(_servers);
-                        }
-                    });
+                    if (hasChange)
+                    {
+                        _activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _onBroadcastClientListener.onServersChanged(_servers);
+                            }
+                        });
+                    }
                 }
             }, ServerCleanupPeriod, ServerCleanupPeriod);
         }

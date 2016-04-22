@@ -48,7 +48,9 @@ namespace ComInLan.Server
 				AutoReset = true,
 			};
 
-			_advertisingTimer.Elapsed += Advertise;
+			_advertisingTimer.Elapsed += delegate {
+				Advertise();
+			};
 
 			IsRunning = false;
 
@@ -58,6 +60,8 @@ namespace ComInLan.Server
 		public virtual void Start()
 		{
 			_advertisingTimer.Start();
+			Advertise();
+
 			IsRunning = true;
 		}
 
@@ -77,7 +81,7 @@ namespace ComInLan.Server
 
 		}
 
-		private void Advertise(object sender, ElapsedEventArgs e)
+		private void Advertise()
 		{
 			_broadcastPacket.Name = Name;
 
