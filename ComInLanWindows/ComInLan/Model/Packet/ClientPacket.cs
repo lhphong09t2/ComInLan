@@ -10,6 +10,7 @@ namespace ComInLan.Model.Packet
 	{
 		public string Id { get; set; }
 		public string Name { get; set; }
+		public ClientPacketType Type { get; set; }
 		public T Data { get; set; }
 	}
 }

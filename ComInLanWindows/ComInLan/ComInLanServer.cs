@@ -23,6 +23,6 @@ namespace ComInLan
 		public ComInLanServer()
 		{
 
-		}		
+		}
 	}
 }

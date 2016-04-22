@@ -87,7 +87,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     _activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            _onComInClientListener.onServersChanged(_servers);
+                            _onBroadcastClientListener.onServersChanged(_servers);
                         }
                     });
                 }
@@ -102,9 +102,9 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         _serverCleanupTimer.cancel();
     }
 
-    private OnComInLanListener _onComInClientListener;
-    public void setOnComInClientListener(OnComInLanListener listener) {
-        _onComInClientListener = listener;
+    private OnBroadcastClientListener _onBroadcastClientListener;
+    public void setOnComInClientListener(OnBroadcastClientListener listener) {
+        _onBroadcastClientListener = listener;
     }
 
     protected void onUdpDataReceived(String dataJson, InetAddress address) {
@@ -124,9 +124,6 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             }
         }
     }
-
-    protected abstract void OnProtocolReceived(IServer server, IServerProtocol serverProtocol);
-    protected abstract void OnDataReceived(IServer server, Object data);
 
     private void handleBroadcastPacket(final IServerPacket<IBroadcastData> broadcastPacket, InetAddress address) {
         final Server server = new Server();
@@ -149,8 +146,8 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 _activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        _onComInClientListener.onServerNewFound(server);
-                        _onComInClientListener.onServersChanged(_servers);
+                        _onBroadcastClientListener.onServerNewFound(server);
+                        _onBroadcastClientListener.onServersChanged(_servers);
                     }
                 });
             } else if (!temp.getChecksum().equals(server.getChecksum())) {
@@ -166,8 +163,8 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 _activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        _onComInClientListener.onServerChanged(temp2);
-                        _onComInClientListener.onServersChanged(_servers);
+                        _onBroadcastClientListener.onServerChanged(temp2);
+                        _onBroadcastClientListener.onServersChanged(_servers);
                     }
                 });
             } else {
@@ -176,15 +173,8 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
-    private void handleProtocolPacket(IServerPacket<IServerProtocol> protocolPacket)
-    {
-
-    }
-
-    private void handleDatapacket(IServerPacket dataPacket)
-    {
-
-    }
+    protected abstract void handleProtocolPacket(IServerPacket<IServerProtocol> protocolPacket);
+    protected abstract void handleDatapacket(IServerPacket dataPacket);
 
     private IServerPacket parseJsonToServer(String json) {
         ServerPacket serverPacket = new ServerPacket();

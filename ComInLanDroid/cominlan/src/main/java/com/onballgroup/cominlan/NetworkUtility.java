@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
  * Created by lep on 4/19/2016.
  */
 public abstract class NetworkUtility {
+    protected final int UdpPacketSizeInByte = 4096;
 
     private DatagramSocket _udpSocket;
     private Thread _udpListenerThread;
@@ -46,7 +47,7 @@ public abstract class NetworkUtility {
         _udpListenerThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                final byte[] receiveData = new byte[1024];
+                final byte[] receiveData = new byte[UdpPacketSizeInByte];
 
                 while (!Thread.currentThread().isInterrupted()) {
                     try {

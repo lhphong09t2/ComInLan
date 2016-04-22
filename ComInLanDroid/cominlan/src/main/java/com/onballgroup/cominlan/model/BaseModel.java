@@ -32,6 +32,7 @@ public abstract class BaseModel  {
             stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)
                     .substring(1));
         }
+
         return stringBuffer.toString();
     }
 }

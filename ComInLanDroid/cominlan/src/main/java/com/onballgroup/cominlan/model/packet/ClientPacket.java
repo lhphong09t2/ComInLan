@@ -6,6 +6,7 @@ package com.onballgroup.cominlan.model.packet;
 public class ClientPacket<T>  implements IClientPacket<T> {
     private String _id;
     private String _name;
+    private ClientPacketType _type;
     private T _data;
 
     @Override
@@ -25,6 +26,11 @@ public class ClientPacket<T>  implements IClientPacket<T> {
     public void setName(String name) {
         _name = name;
     }
+
+    @Override
+    public ClientPacketType getType() { return _type; }
+
+    public void setType(ClientPacketType type) { _type = type; }
 
     @Override
     public T getData() {

@@ -7,12 +7,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.onballgroup.cominlan.ComInLanClient;
-import com.onballgroup.cominlan.OnComInLanListener;
+import com.onballgroup.cominlan.OnBroadcastClientListener;
 import com.onballgroup.cominlan.model.IServer;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnComInLanListener {
+public class MainActivity extends AppCompatActivity implements OnBroadcastClientListener {
 
     private TextView _resultView;
     private ComInLanClient _comInLanClient;

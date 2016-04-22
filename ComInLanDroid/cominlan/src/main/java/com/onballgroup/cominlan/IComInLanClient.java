@@ -8,5 +8,5 @@ import com.onballgroup.cominlan.model.IServer;
 public interface IComInLanClient extends IBroadcastClient {
     boolean connect(IServer server);
     void disconnect(IServer server);
-    void sendData(String jsonData);
+    void sendData(String jsonData, IServer server);
 }

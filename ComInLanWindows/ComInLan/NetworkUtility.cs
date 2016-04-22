@@ -12,6 +12,8 @@ namespace ComInLan
 {
 	public abstract class NetworkUtility
 	{
+		private const int UdpPacketSizeInByte = 4096;
+
 		private Socket _udpSocket;
 		private UdpClient _udpClient;
 		private IPEndPoint _groupEP;

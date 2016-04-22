@@ -8,5 +8,5 @@ public interface IBroadcastClient {
     int getListeningPort();
     void start();
     void stop();
-    void setOnComInClientListener(OnComInLanListener listener);
+    void setOnComInClientListener(OnBroadcastClientListener listener);
 }

@@ -3,6 +3,7 @@ package com.onballgroup.cominlan;
 import android.app.Activity;
 
 import com.onballgroup.cominlan.model.IServer;
+import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.protocol.IServerProtocol;
 
 /**
@@ -20,12 +21,12 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    protected void OnProtocolReceived(IServer server, IServerProtocol serverProtocol) {
+    protected void handleProtocolPacket(IServerPacket<IServerProtocol> protocolPacket) {
 
     }
 
     @Override
-    protected void OnDataReceived(IServer server, Object data) {
+    protected void handleDatapacket(IServerPacket dataPacket) {
 
     }
 
@@ -40,7 +41,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    public void sendData(String jsonData) {
+    public void sendData(String jsonData, IServer server) {
 
     }
 }
