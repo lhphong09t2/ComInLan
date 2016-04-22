@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComInLan.Model
+namespace ComInLan.Model.Base
 {
-	public abstract class BaseModel
+	public abstract class BaseModel : IBaseModel
 	{
 		public static string CalculateChecksum(string content)
 		{

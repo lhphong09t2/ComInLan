@@ -1,13 +1,22 @@
 package com.onballgroup.cominlan.model.packet;
 
+import com.onballgroup.cominlan.model.Base.BaseModel;
+import com.onballgroup.cominlan.model.Base.IBaseModel;
+
+import org.json.JSONObject;
+
 /**
  * Created by Phong Le on 4/18/2016.
  */
-public class ClientPacket<T>  implements IClientPacket<T> {
+public class ClientPacket<T>  extends BaseModel implements IClientPacket<T> {
     private String _id;
     private String _name;
     private ClientPacketType _type;
     private T _data;
+
+    public ClientPacket(JSONObject jsonObject) {
+        super(jsonObject);
+    }
 
     @Override
     public String getId() {
@@ -39,5 +48,15 @@ public class ClientPacket<T>  implements IClientPacket<T> {
 
     public void setData(T data) {
         _data = data;
+    }
+
+    @Override
+    public void create(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public String getJson(IBaseModel model) {
+        return null;
     }
 }

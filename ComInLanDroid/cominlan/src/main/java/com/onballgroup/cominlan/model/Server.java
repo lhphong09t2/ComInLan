@@ -1,5 +1,10 @@
 package com.onballgroup.cominlan.model;
 
+import com.onballgroup.cominlan.model.Base.BaseModel;
+import com.onballgroup.cominlan.model.Base.IBaseModel;
+
+import org.json.JSONObject;
+
 import java.net.InetAddress;
 
 /**
@@ -15,6 +20,11 @@ public class Server extends BaseModel implements IServer {
 
     public Server()
     {
+        refreshTime();
+    }
+
+    public Server(JSONObject jsonObject) {
+        super(jsonObject);
         refreshTime();
     }
 
@@ -72,5 +82,15 @@ public class Server extends BaseModel implements IServer {
     public void refreshTime()
     {
         _refreshTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void create(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public String getJson(IBaseModel model) {
+        return null;
     }
 }

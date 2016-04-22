@@ -1,10 +1,36 @@
-package com.onballgroup.cominlan.model;
+package com.onballgroup.cominlan.model.Base;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public abstract class BaseModel  {
+public abstract class BaseModel implements IBaseModel {
+
+    public BaseModel() {
+        super();
+    }
+
+    public BaseModel(JSONObject jsonObject)
+    {
+        try {
+            _dataJsonObject = new JSONObject(jsonObject.getString("Data"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        create(jsonObject);
+    }
+
+    private JSONObject _dataJsonObject;
+
+    @Override
+    public JSONObject getDataJsonObject()
+    {
+        return  _dataJsonObject;
+    }
+
     public static String calculateChecksum(String content)
     {
         if (content == null)

@@ -8,7 +8,6 @@ import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.Server;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.packet.ServerPacket;
-import com.onballgroup.cominlan.model.packet.ServerPacketType;
 import com.onballgroup.cominlan.model.protocol.IServerProtocol;
 
 import org.json.JSONException;
@@ -108,25 +107,33 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     protected void onUdpDataReceived(String dataJson, InetAddress address) {
-        final IServerPacket serverPacket = parseJsonToServer(dataJson);
+        final IServerPacket serverPacket;
+        try {
+            serverPacket = new ServerPacket(new JSONObject(dataJson));
 
-        if (serverPacket.getDomainId().equals(getDomainId())) {
-            switch (serverPacket.getType()) {
-                case Broadcast:
-                    handleBroadcastPacket(serverPacket, address);
-                    break;
-                case Protocol:
-                    handleProtocolPacket(serverPacket);
-                    break;
-                case Data:
-                    handleDatapacket(serverPacket);
-                    break;
+            if (serverPacket.getDomainId().equals(getDomainId())) {
+                switch (serverPacket.getType()) {
+                    case Broadcast:
+                        handleBroadcastPacket(serverPacket, address);
+                        break;
+                    case Protocol:
+                        handleProtocolPacket(serverPacket);
+                        break;
+                    case Data:
+                        handleDatapacket(serverPacket);
+                        break;
+                }
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
     private void handleBroadcastPacket(final IServerPacket<IBroadcastData> broadcastPacket, InetAddress address) {
         final Server server = new Server();
+        IBroadcastData data = new BroadcastData(broadcastPacket.getDataJsonObject());
+        ((ServerPacket)broadcastPacket).setData(data);
+
         server.setId(broadcastPacket.getId());
         server.setName(broadcastPacket.getName());
         server.setAddress(address);
@@ -175,25 +182,4 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     protected abstract void handleProtocolPacket(IServerPacket<IServerProtocol> protocolPacket);
     protected abstract void handleDatapacket(IServerPacket dataPacket);
-
-    private IServerPacket parseJsonToServer(String json) {
-        ServerPacket serverPacket = new ServerPacket();
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-
-            JSONObject dataJsonObject = new JSONObject(jsonObject.getString("Data"));
-            BroadcastData broadcastData = new BroadcastData();
-            broadcastData.setListeningPort(dataJsonObject.getInt("ListeningPort"));
-
-            serverPacket.setId(jsonObject.getString("Id"));
-            serverPacket.setDomainId(jsonObject.getString("DomainId"));
-            serverPacket.setName(jsonObject.getString("Name"));
-            serverPacket.setType(ServerPacketType.values()[jsonObject.getInt("Type")]);
-            serverPacket.setData(broadcastData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return serverPacket;
-    }
 }

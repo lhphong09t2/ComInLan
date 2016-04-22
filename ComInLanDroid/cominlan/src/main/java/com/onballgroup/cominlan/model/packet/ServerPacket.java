@@ -1,14 +1,24 @@
 package com.onballgroup.cominlan.model.packet;
 
+import com.onballgroup.cominlan.model.Base.BaseModel;
+import com.onballgroup.cominlan.model.Base.IBaseModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Phong Le on 4/17/2016.
  */
-public class ServerPacket<T> implements IServerPacket<T> {
+public class ServerPacket<T>  extends BaseModel implements IServerPacket<T> {
     private String _id;
     private String _domainId;
     private String _name;
     private ServerPacketType _type;
     private T _data;
+
+    public ServerPacket(JSONObject jsonObject) {
+        super(jsonObject);
+    }
 
     @Override
     public String getId() {
@@ -49,5 +59,22 @@ public class ServerPacket<T> implements IServerPacket<T> {
 
     public void setData(T data) {
         _data = data;
+    }
+
+    @Override
+    public void create(JSONObject jsonObject) {
+        try {
+            _id = jsonObject.getString("Id");
+            _domainId = jsonObject.getString("DomainId");
+            _name = jsonObject.getString("Name");
+            _type = ServerPacketType.values()[jsonObject.getInt("Type")];
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getJson(IBaseModel model) {
+        return null;
     }
 }
