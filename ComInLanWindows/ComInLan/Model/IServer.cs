@@ -11,10 +11,11 @@ namespace ComInLan.Model
 	{
 		string Id { get; }
 		string Name { get; }
-		IPAddress Address { get; }
 		int Port { get; }
+
+		IPAddress Address { get; }
 		String Checksum { get; }
 		long RefreshTime { get; }
-		ServerState State { get; }
+		ClientState State { get; }
 	}
 }

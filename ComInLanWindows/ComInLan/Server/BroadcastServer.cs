@@ -91,7 +91,25 @@ namespace ComInLan.Server
 		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{
 			var clientPacket = JsonConvert.DeserializeObject<ClientPacket>(dataJson);
+
+			switch (clientPacket.Type)
+			{
+				case ClientPacketType.Refresh:
+					HandleRefreshPacket(clientPacket);
+					break;
+				case ClientPacketType.Protocol:
+					HandleDatapacket(clientPacket);
+					break;
+				case ClientPacketType.Data:
+					HandleDatapacket(clientPacket);
+					break;
+			}
 		}
+		protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
+
+		protected abstract void HandleProtocolPacket(ClientPacket protocolPacket);
+
+		protected abstract void HandleDatapacket(ClientPacket dataPacket);
 
 		private void Advertise()
 		{

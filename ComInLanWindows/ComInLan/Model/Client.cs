@@ -9,6 +9,22 @@ namespace ComInLan.Model
 {
 	public class Client : BaseModel, IClient
 	{
+		//--------------Created from packet------------------//
+		public string Id { get; set;  }
 
+		public string Name { get; set; }
+
+
+
+		//--------------Created by app------------------//
+
+		public long RefreshTime { get; private set; }
+
+		public ServerState State { get; set; }
+
+		public void Refresh()
+		{
+			RefreshTime = GetCurrentUnixTimestamp();
+		}
 	}
 }

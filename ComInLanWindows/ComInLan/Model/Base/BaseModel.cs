@@ -26,5 +26,10 @@ namespace ComInLan.Model.Base
 
 			return hash;
 		}
+
+		public static long GetCurrentUnixTimestamp()
+		{
+			return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+		}
 	}
 }

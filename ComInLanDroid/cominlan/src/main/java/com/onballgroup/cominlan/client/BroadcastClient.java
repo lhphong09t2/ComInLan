@@ -133,8 +133,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     protected void onUdpDataReceived(String dataJson, InetAddress address) {
-        IServerPacket serverPacket;
-        serverPacket = new ServerPacket();
+        IServerPacket serverPacket = new ServerPacket();
         serverPacket.create(dataJson);
 
         if (serverPacket.getDomainId().equals(getDomainId())) {

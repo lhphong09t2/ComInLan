@@ -8,7 +8,6 @@ namespace ComInLan.Model.Protocol
 {
 	public enum ClientCommand
 	{
-		Refresh,
 		RequestConnect,
 		Passcode,
 		Disconnect

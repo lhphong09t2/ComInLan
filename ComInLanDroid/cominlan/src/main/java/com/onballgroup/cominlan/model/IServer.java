@@ -10,11 +10,12 @@ import java.net.InetAddress;
 public interface IServer extends IBaseModel {
     String getId();
     String getName();
-    InetAddress getAddress();
     int getPort();
+
+    InetAddress getAddress();
     String getChecksum();
-    long getRefreshTime();
     ServerState getState();
+    long getRefreshTime();
 
     void setOnServerStateListener(OnServerStateListener listener);
 }

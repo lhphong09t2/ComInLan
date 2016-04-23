@@ -70,17 +70,25 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         _serverListView.getSelectedItem();
     }
 
-    private void showText(final String text) {
-
-    }
-
     @Override
     public void onServerNewFound(IServer server) {
     }
 
     @Override
-    public void onServerChanged(IServer server) {
+    public void onServerChanged(IServer server)
+    {
         _arrayAdapter.notifyDataSetChanged();
+
+        if (_serverListView.getSelectedItem() == server)
+        {
+            if (server.getState() == ServerState.Connected) {
+                _sendButton.setEnabled(true);
+                _dataEditText.setEnabled(true);
+            } else {
+                _sendButton.setEnabled(false);
+                _dataEditText.setEnabled(false);
+            }
+        }
     }
 
     @Override

@@ -2,9 +2,6 @@ package com.onballgroup.cominlan.model;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by Phong Le on 4/20/2016.
  */

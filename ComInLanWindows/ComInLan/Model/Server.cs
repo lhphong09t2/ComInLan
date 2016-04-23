@@ -10,28 +10,27 @@ namespace ComInLan.Model
 {
 	public class Server : BaseModel, IServer
 	{
-		public Server()
-		{
 
-		}
-
-		public IPAddress Address { get; set; }
-
-		public string Checksum { get; set; }
-
+		//--------------Created from packet------------------//
 		public string Id { get; set; }
 
 		public string Name { get; set; }
 
 		public int Port { get; set; }
 
-		public long RefreshTime { get; set; }
 
-		public ServerState State { get; set; }
+		//--------------Created by app------------------//
+		public IPAddress Address { get; set; }
+
+		public string Checksum { get; set; }
+
+		public long RefreshTime { get; private set; }
+
+		public ClientState State { get; set; }
 
 		public void Refresh()
 		{
-			RefreshTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+			RefreshTime = GetCurrentUnixTimestamp();
 		}
 	}
 }

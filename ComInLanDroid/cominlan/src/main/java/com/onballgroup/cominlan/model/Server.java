@@ -8,13 +8,10 @@ import java.net.InetAddress;
  * Created by Phong Le on 4/20/2016.
  */
 public class Server extends BaseModel implements IServer {
+    //--------------Created from packet------------------//
     private String _id;
     private String _name;
-    private InetAddress _address;
     private int _port;
-    private String _checksum;
-    private long _refreshTime;
-    private ServerState _state;
 
     public Server() {
         refresh();
@@ -57,6 +54,12 @@ public class Server extends BaseModel implements IServer {
         _port = port;
     }
 
+    //--------------Created by app------------------//
+    private InetAddress _address;
+    private String _checksum;
+    private long _refreshTime;
+    private ServerState _state;
+
     @Override
     public String getChecksum() {
         return _checksum;
@@ -86,7 +89,7 @@ public class Server extends BaseModel implements IServer {
     }
 
     public void refresh() {
-        _refreshTime = System.currentTimeMillis() / 1000;
+        _refreshTime = getCurrentUnixTimestamp();
     }
 
     // Events

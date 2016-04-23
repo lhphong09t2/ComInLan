@@ -8,6 +8,7 @@ namespace ComInLan.Model.Packet
 {
 	public enum ClientPacketType
 	{
+		Refresh,
 		Protocol,
 		Data
 	}

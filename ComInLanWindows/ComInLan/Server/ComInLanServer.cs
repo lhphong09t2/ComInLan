@@ -1,12 +1,8 @@
-﻿using ComInLan.Model;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using ComInLan.Model;
 using ComInLan.Model.Packet;
-using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace ComInLan.Server
 {
@@ -22,7 +18,31 @@ namespace ComInLan.Server
 
 		public ComInLanServer()
 		{
+			ConfirmingClients = new List<IClient>();
+			ConnectedClients = new List<IClient>();
+			BlackClients = new List<IClient>();
+			WhiteClients = new List<IClient>();
+		}
 
+		public List<IClient> ConfirmingClients { get; private set; }
+		public List<IClient> ConnectedClients { get; private set; }
+		public List<IClient> BlackClients { get; private set; }
+		public List<IClient> WhiteClients { get; private set; }
+
+
+		protected override void HandleProtocolPacket(ClientPacket protocolPacket)
+		{
+
+		}
+
+		protected override void HandleDatapacket(ClientPacket dataPacket)
+		{
+
+		}
+
+		protected override void HandleRefreshPacket(ClientPacket freshPacket)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
