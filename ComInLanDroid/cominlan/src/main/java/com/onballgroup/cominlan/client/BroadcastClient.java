@@ -66,13 +66,13 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         while (!startUdp(UdpListenerPort[index]))
         {
             index++;
-            if(index >= 4)
+            if(index >= UdpListenerPort.length)
             {
                 break;
             }
         }
 
-        if (index < 4)
+        if (index < UdpListenerPort.length)
         {
             _listeningPort = UdpListenerPort[index];
             _isRunning = true;
