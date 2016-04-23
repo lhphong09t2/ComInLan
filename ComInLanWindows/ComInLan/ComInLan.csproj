@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Client\BroadcastClient.cs" />
     <Compile Include="Client\IBroadcastClient.cs" />
+    <Compile Include="Model\Base\IJson.cs" />
+    <Compile Include="Model\Base\Json.cs" />
     <Compile Include="Model\ClientState.cs" />
     <Compile Include="Model\ServerState.cs" />
     <Compile Include="Server\BroadcastServer.cs" />

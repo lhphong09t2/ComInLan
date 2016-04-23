@@ -1,23 +1,16 @@
 package com.onballgroup.cominlan.model.protocol;
 
-import com.onballgroup.cominlan.model.Base.BaseModel;
+import com.onballgroup.cominlan.model.Base.Json;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by Phong Le on 4/20/2016.
  */
-public class ClientProtocol  extends BaseModel implements IClientProtocol {
+public class ClientProtocol  extends Json implements IClientProtocol {
     ClientCommand _command;
     Object _data;
-
-    public ClientProtocol() {
-        super();
-    }
-
-    public ClientProtocol(JSONObject jsonObject) {
-        super(jsonObject);
-    }
 
     @Override
     public ClientCommand getCommand() {
@@ -38,11 +31,19 @@ public class ClientProtocol  extends BaseModel implements IClientProtocol {
     }
 
     @Override
-    public void create(JSONObject jsonObject) {
+    public void create(String json) {
     }
 
     @Override
-    public JSONObject createJsonObject() {
-        return null;
+    public String createJson()
+    {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("Command", _command);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  jsonObject.toString();
     }
 }

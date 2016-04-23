@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model.Packet
 {
-	public class ServerPacket<T> : BaseModel, IServerPacket<T>
+	public class ServerPacket : Json, IServerPacket
 	{
 		public string DomainId { get; set; }
 
@@ -16,7 +16,5 @@ namespace ComInLan.Model.Packet
 		public string Name { get; set; }
 
 		public ServerPacketType Type { get; set; }
-
-		public T Data { get; set; }
 	}
 }

@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model.Packet
 {
-	public class ClientPacket<T> : BaseModel, IClientPacket<T>
+	public class ClientPacket : Json, IClientPacket
 	{
 		public string Id { get; set; }
 		public string Name { get; set; }
 		public ClientPacketType Type { get; set; }
-		public T Data { get; set; }
 	}
 }

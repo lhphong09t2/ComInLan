@@ -25,15 +25,20 @@ public abstract class NetworkUtility {
         }
     }
 
-    protected void sendUdp(String dataJson, InetAddress address, int port) {
-        byte[] data = dataJson.getBytes(Charset.forName("UTF-8"));
-        DatagramPacket packet = new DatagramPacket(
-                data, data.length, address, port);
-        try {
-            _udpSocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void sendUdp(final String dataJson, final InetAddress address, final int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] data = dataJson.getBytes(Charset.forName("UTF-8"));
+                DatagramPacket packet = new DatagramPacket(
+                        data, data.length, address, port);
+                try {
+                    _udpSocket.send(packet);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     protected boolean startUdp(int udpListeningPort) {

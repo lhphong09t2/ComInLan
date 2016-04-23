@@ -22,23 +22,25 @@ namespace ComInLan.Server
 
 		public bool IsRunning { get; private set; }
 
-		public int ListeningPort { get { return _broadcastPacket.Data.ListeningPort; } }
+		public int ListeningPort { get; private set; }
 
 		public abstract string DomainId { get; }
 
 		private Timer _advertisingTimer;
-		private ServerPacket<IBroadcastData> _broadcastPacket;
+		private ServerPacket _broadcastPacket;
 
 		public BroadcastServer()
 		{
+			ListeningPort = FindAvaiablePortToListen();
+
 			var broadcastData = new BroadcastData()
 			{
-				ListeningPort = FindAvaiablePortToListen()
+				ListeningPort = ListeningPort
 			};
 
-			_broadcastPacket = new ServerPacket<IBroadcastData>()
+			_broadcastPacket = new ServerPacket()
 			{
-				Data = broadcastData,
+				DataJson = JsonConvert.SerializeObject(broadcastData),
 				Id = Guid.NewGuid().ToString(),
 				DomainId = DomainId,
 				Type = ServerPacketType.Broadcast
@@ -58,12 +60,21 @@ namespace ComInLan.Server
 			InitUdp();
 		}
 
-		public virtual void Start()
+		public virtual bool Start()
 		{
-			_advertisingTimer.Start();
-			Advertise();
+			if (StartUdp(ListeningPort))
+			{
+				_advertisingTimer.Start();
+				Advertise();
 
-			IsRunning = true;
+				IsRunning = true;
+			}
+			else
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		public virtual void Stop()
@@ -79,7 +90,7 @@ namespace ComInLan.Server
 
 		protected override void OnUdpDataReceived(string dataJson, IPAddress address)
 		{
-			var clientPacket = JsonConvert.DeserializeObject<ClientPacket<object>>(dataJson);
+			var clientPacket = JsonConvert.DeserializeObject<ClientPacket>(dataJson);
 		}
 
 		private void Advertise()

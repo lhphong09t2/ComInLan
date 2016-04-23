@@ -9,10 +9,6 @@ import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.Server;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.packet.ServerPacket;
-import com.onballgroup.cominlan.model.protocol.IServerProtocol;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -25,16 +21,17 @@ import java.util.TimerTask;
  * Created by Phong Le on 4/21/2016.
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
-    public final int[] UdpListenerPort = { 55176, 23435, 34523, 45349 };
+    public final int[] UdpListenerPort = {55176, 23435, 34523, 45349};
     public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
-    protected Activity getActivity()
-    {
-        return  _activity;
+
+    protected Activity getActivity() {
+        return _activity;
     }
 
     private List<IServer> _servers;
+
     @Override
     public List<IServer> getServers() {
         return _servers;
@@ -50,6 +47,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     private boolean _isRunning = false;
+
     public boolean isRunning() {
         return _isRunning;
     }
@@ -63,17 +61,14 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     public void start() {
         int index = 0;
-        while (!startUdp(UdpListenerPort[index]))
-        {
+        while (!startUdp(UdpListenerPort[index])) {
             index++;
-            if(index >= UdpListenerPort.length)
-            {
+            if (index >= UdpListenerPort.length) {
                 break;
             }
         }
 
-        if (index < UdpListenerPort.length)
-        {
+        if (index < UdpListenerPort.length) {
             _listeningPort = UdpListenerPort[index];
             _isRunning = true;
 
@@ -81,7 +76,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    long currentTime = System.currentTimeMillis()/1000;
+                    long currentTime = System.currentTimeMillis() / 1000;
                     Iterator<IServer> it = _servers.iterator();
 
                     boolean hasChange = false;
@@ -89,7 +84,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     synchronized (_servers) {
                         while (it.hasNext()) {
                             final IServer server = it.next();
-                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod/1000) {
+                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod / 1000) {
                                 it.remove();
 
                                 _activity.runOnUiThread(new Runnable() {
@@ -104,12 +99,11 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                         }
                     }
 
-                    if (hasChange)
-                    {
+                    if (hasChange) {
                         _activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                            _onBroadcastClientListener.onServersChanged(_servers);
+                                _onBroadcastClientListener.onServersChanged(_servers);
                             }
                         });
                     }
@@ -133,42 +127,41 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     private OnBroadcastClientListener _onBroadcastClientListener;
+
     public void setOnComInClientListener(OnBroadcastClientListener listener) {
         _onBroadcastClientListener = listener;
     }
 
     protected void onUdpDataReceived(String dataJson, InetAddress address) {
-        final IServerPacket serverPacket;
-        try {
-            serverPacket = new ServerPacket(new JSONObject(dataJson));
+        IServerPacket serverPacket;
+        serverPacket = new ServerPacket();
+        serverPacket.create(dataJson);
 
-            if (serverPacket.getDomainId().equals(getDomainId())) {
-                switch (serverPacket.getType()) {
-                    case Broadcast:
-                        handleBroadcastPacket(serverPacket, address);
-                        break;
-                    case Protocol:
-                        handleProtocolPacket(serverPacket);
-                        break;
-                    case Data:
-                        handleDatapacket(serverPacket);
-                        break;
-                }
+        if (serverPacket.getDomainId().equals(getDomainId())) {
+            switch (serverPacket.getType()) {
+                case Broadcast:
+                    handleBroadcastPacket(serverPacket, address);
+                    break;
+                case Protocol:
+                    handleProtocolPacket(serverPacket);
+                    break;
+                case Data:
+                    handleDatapacket(serverPacket);
+                    break;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
-    private void handleBroadcastPacket(final IServerPacket<IBroadcastData> broadcastPacket, InetAddress address) {
+    private void handleBroadcastPacket(final IServerPacket broadcastPacket, InetAddress address) {
         final Server server = new Server();
-        IBroadcastData data = new BroadcastData(broadcastPacket.getDataJsonObject());
-        ((ServerPacket)broadcastPacket).setData(data);
+
+        IBroadcastData data = new BroadcastData();
+        data.create(broadcastPacket.getDataJson());
 
         server.setId(broadcastPacket.getId());
         server.setName(broadcastPacket.getName());
         server.setAddress(address);
-        server.setPort(broadcastPacket.getData().getListeningPort());
+        server.setPort(data.getListeningPort());
         server.calculateChecksum();
 
         Server temp = null;
@@ -192,7 +185,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 temp.setId(broadcastPacket.getId());
                 temp.setName(broadcastPacket.getName());
                 temp.setAddress(address);
-                temp.setPort(broadcastPacket.getData().getListeningPort());
+                temp.setPort(data.getListeningPort());
                 temp.calculateChecksum();
                 temp.refresh();
 
@@ -210,6 +203,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
-    protected abstract void handleProtocolPacket(IServerPacket<IServerProtocol> protocolPacket);
+    protected abstract void handleProtocolPacket(IServerPacket protocolPacket);
+
     protected abstract void handleDatapacket(IServerPacket dataPacket);
 }

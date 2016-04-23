@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model.Protocol
 {
-	public class ServerProtocol : BaseModel, IServerProtocol
+	public class ServerProtocol : Json, IServerProtocol
 	{
 		public ServerCommand Command { get; set; }
-
-		public object Data { get; set; }
 	}
 }

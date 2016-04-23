@@ -1,6 +1,6 @@
 package com.onballgroup.cominlan.model.packet;
 
-import com.onballgroup.cominlan.model.Base.BaseModel;
+import com.onballgroup.cominlan.model.Base.Json;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,19 +8,10 @@ import org.json.JSONObject;
 /**
  * Created by Phong Le on 4/18/2016.
  */
-public class ClientPacket<T>  extends BaseModel implements IClientPacket<T> {
+public class ClientPacket extends Json implements IClientPacket {
     private String _id;
     private String _name;
     private ClientPacketType _type;
-    private T _data;
-
-    public ClientPacket() {
-        super();
-    }
-
-    public ClientPacket(JSONObject jsonObject) {
-        super(jsonObject);
-    }
 
     @Override
     public String getId() {
@@ -46,31 +37,23 @@ public class ClientPacket<T>  extends BaseModel implements IClientPacket<T> {
     public void setType(ClientPacketType type) { _type = type; }
 
     @Override
-    public T getData() {
-        return _data;
-    }
-
-    public void setData(T data) {
-        _data = data;
-    }
-
-    @Override
-    public void create(JSONObject jsonObject) {
+    public void create(String json) {
 
     }
 
     @Override
-    public JSONObject createJsonObject() {
+    public String createJson() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("Id", _id);
             jsonObject.put("Name", _name);
-            jsonObject.put("Type", _id);
+            jsonObject.put("Type",  _type);
+            jsonObject.put("DataJson", getDataJson());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return  jsonObject;
+        return  jsonObject.toString();
     }
 }

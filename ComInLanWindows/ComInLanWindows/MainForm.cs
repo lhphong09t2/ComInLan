@@ -26,10 +26,9 @@ namespace ComInLanWindows
 				startButton.Text = "Start";
 				_server.Stop();
 			}
-			else
+			else if (_server.Start())
 			{
 				startButton.Text = "Stop";
-				_server.Start();
 			}
 		}
 

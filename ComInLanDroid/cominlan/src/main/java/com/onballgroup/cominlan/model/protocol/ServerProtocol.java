@@ -1,23 +1,13 @@
 package com.onballgroup.cominlan.model.protocol;
 
-import com.onballgroup.cominlan.model.Base.BaseModel;
-
-import org.json.JSONObject;
+import com.onballgroup.cominlan.model.Base.Json;
 
 /**
  * Created by Phong Le on 4/20/2016.
  */
-public class ServerProtocol  extends BaseModel implements IServerProtocol {
+public class ServerProtocol  extends Json implements IServerProtocol {
     ServerCommand _command;
     Object _data;
-
-    public ServerProtocol() {
-        super();
-    }
-
-    public ServerProtocol(JSONObject jsonObject) {
-        super(jsonObject);
-    }
 
     @Override
     public ServerCommand getCommand() {
@@ -38,11 +28,11 @@ public class ServerProtocol  extends BaseModel implements IServerProtocol {
     }
 
     @Override
-    public void create(JSONObject jsonObject) {
+    public void create(String json) {
     }
 
     @Override
-    public JSONObject createJsonObject() {
+    public String createJson() {
         return null;
     }
 }

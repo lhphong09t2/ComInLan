@@ -11,9 +11,6 @@ import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.protocol.ClientCommand;
 import com.onballgroup.cominlan.model.protocol.ClientProtocol;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.UUID;
 
 /**
@@ -59,7 +56,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
         ClientProtocol protocol = new ClientProtocol();
         protocol.setCommand(ClientCommand.RequestConnect);
-        sendClientPacket(ClientPacketType.Protocol, protocol.getDataJsonObject(), server);
+        sendClientPacket(ClientPacketType.Protocol, protocol.getDataJson(), server);
     }
 
     @Override
@@ -68,26 +65,19 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    public void sendData(JSONObject dataJsonObject, IServer server) {
-        sendClientPacket(ClientPacketType.Data, dataJsonObject, server);
+    public void sendData(String dataJson, IServer server) {
+        sendClientPacket(ClientPacketType.Data, dataJson , server);
     }
 
-    private void sendClientPacket(ClientPacketType type, JSONObject dataJsonObject, IServer server)
+    private void sendClientPacket(ClientPacketType type, String dataJson, IServer server)
     {
         ClientPacket clientPacket = new ClientPacket();
         clientPacket.setId(UUID.randomUUID().toString());
         clientPacket.setName(_name);
         clientPacket.setType(ClientPacketType.Protocol);
+        clientPacket.setDataJson(dataJson);
 
-        JSONObject jsonObject = clientPacket.createJsonObject();
-
-        try {
-            jsonObject.put("Data", dataJsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        sendUdp(jsonObject.toString(), server.getAddress(), server.getPort());
+        sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());
     }
 }
 

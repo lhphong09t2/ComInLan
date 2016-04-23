@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model
 {
-	public class BroadcastData : BaseModel, IBroadcastData
+	public class BroadcastData : Json, IBroadcastData
 	{
 		public int ListeningPort { get; set; }
 	}

@@ -10,7 +10,7 @@ namespace ComInLan.Server
 		int ListeningPort { get; }
 		bool IsRunning { get; }
 
-		void Start();
+		bool Start();
 		void Stop();
 
 		void ChangId();
