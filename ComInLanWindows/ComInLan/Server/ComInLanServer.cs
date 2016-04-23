@@ -129,6 +129,22 @@ namespace ComInLan.Server
 
 				client.CalculateChecksum();
 				client.Refresh();
+
+				var responseProtocol = new ServerProtocol()
+				{
+					Command = ServerCommand.RequestPasscode
+				};
+
+				var reponsePacket = new ServerPacket()
+				{
+					Id = Id,
+					DomainId = DomainId,
+					Name = Name,
+					Type = ServerPacketType.Protocol,
+					DataJson = JsonConvert.SerializeObject(responseProtocol)
+				};
+
+				SendUdp(JsonConvert.SerializeObject(reponsePacket), client.Address, client.Port);
 			}
 		}
 
@@ -152,7 +168,7 @@ namespace ComInLan.Server
 				var reponsePacket = new ServerPacket()
 				{
 					Id = Id,
-					DomainId = Id,
+					DomainId = DomainId,
 					Name = Name,
 					Type = ServerPacketType.Protocol,
 					DataJson = JsonConvert.SerializeObject(responseProtocol)

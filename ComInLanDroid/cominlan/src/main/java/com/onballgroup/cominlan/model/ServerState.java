@@ -6,5 +6,7 @@ package com.onballgroup.cominlan.model;
 public enum ServerState {
     None,
     Waiting,
+    RequestPasscode,
+    PasscodeSent,
     Connected
 }

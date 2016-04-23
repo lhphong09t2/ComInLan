@@ -80,7 +80,7 @@ public class CServer extends BaseModel implements IServer {
 
         if (_onServerStateListener != null)
         {
-            _onServerStateListener.onStateChanged(this, state);
+            _onServerStateListener.onStateChanged(this);
         }
     }
 
@@ -96,7 +96,7 @@ public class CServer extends BaseModel implements IServer {
     {
         if (_onServerStateListener != null)
         {
-            _onServerStateListener.onDataReceived(this, dataJson);
+            _onServerStateListener.onDataReceived(this);
         }
     }
 

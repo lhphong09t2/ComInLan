@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.onballgroup.cominlan.client.ComInLanClient;
 import com.onballgroup.cominlan.client.OnBroadcastClientListener;
 import com.onballgroup.cominlan.model.IServer;
+import com.onballgroup.cominlan.model.OnServerStateListener;
 import com.onballgroup.cominlan.model.ServerState;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     private EditText _dataEditText;
 
     private View _sendButton;
+    private View _sendPasscodeButon;
 
     private ComInLanClient _comInLanClient;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         _nameEditText = (EditText) findViewById(R.id.nameEditText);
         _dataEditText = (EditText) findViewById(R.id.dataEditText);
         _sendButton = findViewById(R.id.sendButton);
+        _sendPasscodeButon = findViewById(R.id.passcodeButton);
 
         _nameEditText.setText(Build.MODEL);
 
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
             _nameEditText.setEnabled(true);
 
             _sendButton.setEnabled(false);
-            _dataEditText.setEnabled(false);
         } else {
             _comInLanClient.start();
             ((Button) v).setText("Listening");
@@ -67,10 +69,9 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     }
 
     public void sendPasscodeButtonClick(View v) {
-        IServer server = (IServer)_serverListView.getSelectedItem();
+        IServer server = (IServer) _serverListView.getSelectedItem();
 
-        if (server != null)
-        {
+        if (server != null) {
             _comInLanClient.sendPasscode(server, _dataEditText.getText().toString());
         }
     }
@@ -84,20 +85,8 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     }
 
     @Override
-    public void onServerChanged(IServer server)
-    {
+    public void onServerChanged(IServer server) {
         _arrayAdapter.notifyDataSetChanged();
-
-        if (_serverListView.getSelectedItem() == server)
-        {
-            if (server.getState() == ServerState.Connected) {
-                _sendButton.setEnabled(true);
-                _dataEditText.setEnabled(true);
-            } else {
-                _sendButton.setEnabled(false);
-                _dataEditText.setEnabled(false);
-            }
-        }
     }
 
     @Override
@@ -111,7 +100,35 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        _serverListView.setItemChecked(position, true);
+
         IServer server = _arrayAdapter.getItem(position);
+        server.setOnServerStateListener(new OnServerStateListener() {
+            @Override
+            public void onStateChanged(IServer server) {
+                _arrayAdapter.notifyDataSetChanged();
+
+                if (_serverListView.getSelectedItem() == server) {
+                    if (server.getState() == ServerState.Connected) {
+                        _sendButton.setEnabled(true);
+                    } else {
+                        _sendButton.setEnabled(false);
+                    }
+
+                    if (server.getState() == ServerState.RequestPasscode) {
+                        _sendPasscodeButon.setEnabled(true);
+                    } else {
+                        _sendPasscodeButon.setEnabled(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onDataReceived(IServer server) {
+
+            }
+        });
+
         _comInLanClient.connect(server);
     }
 
@@ -128,16 +145,20 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
 
         if (server.getState() == ServerState.Connected) {
             _sendButton.setEnabled(true);
-            _dataEditText.setEnabled(true);
         } else {
-            _sendButton.setEnabled(false);
-            _dataEditText.setEnabled(false);
+            _sendPasscodeButon.setEnabled(false);
+        }
+
+        if (server.getState() == ServerState.RequestPasscode) {
+            _sendButton.setEnabled(true);
+        } else {
+            _sendPasscodeButon.setEnabled(false);
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         _sendButton.setEnabled(false);
-        _dataEditText.setEnabled(false);
+        _sendPasscodeButon.setEnabled(false);
     }
 }
