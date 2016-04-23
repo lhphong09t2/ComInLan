@@ -1,7 +1,6 @@
 package com.onballgroup.cominlan.model;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
-import com.onballgroup.cominlan.model.Base.IBaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +35,7 @@ public class BroadcastData extends BaseModel implements IBroadcastData {
     }
 
     @Override
-    public String getJson(IBaseModel model) {
+    public JSONObject createJsonObject() {
         return null;
     }
 }

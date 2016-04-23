@@ -21,6 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="sendButtonClick"
         android:text="Send" />
 
@@ -33,12 +34,22 @@
     </ListView>
 
     <EditText
+        android:id="@+id/nameEditText"
+        android:layout_toRightOf="@id/startButton"
+        android:layout_alignBottom="@id/startButton"
+        android:layout_marginLeft="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type name"/>
+
+    <EditText
         android:id="@+id/dataEditText"
         android:layout_toRightOf="@id/sendButton"
         android:layout_alignBottom="@id/sendButton"
         android:layout_marginLeft="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:hint="Type data to send"/>
 
 </RelativeLayout>

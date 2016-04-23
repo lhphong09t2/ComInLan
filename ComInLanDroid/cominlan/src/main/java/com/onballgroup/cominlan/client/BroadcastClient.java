@@ -29,7 +29,17 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     public final int ServerCleanupPeriod = 6000;
 
     private Activity _activity;
+    protected Activity getActivity()
+    {
+        return  _activity;
+    }
+
     private List<IServer> _servers;
+    @Override
+    public List<IServer> getServers() {
+        return _servers;
+    }
+
     private Timer _serverCleanupTimer;
 
     public BroadcastClient(Activity activity) {
@@ -37,8 +47,6 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         _servers = new ArrayList<IServer>();
 
         initUdp();
-
-        _serverCleanupTimer = new Timer();
     }
 
     private boolean _isRunning = false;
@@ -51,11 +59,6 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     @Override
     public int getListeningPort() {
         return _listeningPort;
-    }
-
-    @Override
-    public List<IServer> getServers() {
-        return _servers;
     }
 
     public void start() {
@@ -74,6 +77,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             _listeningPort = UdpListenerPort[index];
             _isRunning = true;
 
+            _serverCleanupTimer = new Timer();
             _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
@@ -119,6 +123,13 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         _isRunning = false;
 
         _serverCleanupTimer.cancel();
+        _serverCleanupTimer.purge();
+        _serverCleanupTimer = null;
+
+        synchronized (_servers) {
+            _servers.clear();
+            _onBroadcastClientListener.onServersChanged(_servers);
+        }
     }
 
     private OnBroadcastClientListener _onBroadcastClientListener;
@@ -191,7 +202,6 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     @Override
                     public void run() {
                         _onBroadcastClientListener.onServerChanged(temp2);
-                        _onBroadcastClientListener.onServersChanged(_servers);
                     }
                 });
             } else {

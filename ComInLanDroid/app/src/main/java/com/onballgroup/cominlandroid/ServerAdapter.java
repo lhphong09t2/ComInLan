@@ -29,11 +29,13 @@ public class ServerAdapter extends ArrayAdapter<IServer> {
 
         String string = server.getId() + "\n"
                 + server.getName() + " " + server.getAddress() + ":"
-                + server.getPort()
-                + (server.isConnected() ? "\nConnected" : "");
+                + server.getPort() + "\n"
+                + server.getState().name();
 
         ((TextView)convertView.findViewById(R.id.serverText)).setText(string);
 
         return convertView;
     }
+
+
 }

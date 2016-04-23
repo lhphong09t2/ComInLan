@@ -1,7 +1,6 @@
 package com.onballgroup.cominlan.model.protocol;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
-import com.onballgroup.cominlan.model.Base.IBaseModel;
 
 import org.json.JSONObject;
 
@@ -11,6 +10,10 @@ import org.json.JSONObject;
 public class ServerProtocol  extends BaseModel implements IServerProtocol {
     ServerCommand _command;
     Object _data;
+
+    public ServerProtocol() {
+        super();
+    }
 
     public ServerProtocol(JSONObject jsonObject) {
         super(jsonObject);
@@ -39,7 +42,7 @@ public class ServerProtocol  extends BaseModel implements IServerProtocol {
     }
 
     @Override
-    public String getJson(IBaseModel model) {
+    public JSONObject createJsonObject() {
         return null;
     }
 }

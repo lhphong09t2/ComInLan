@@ -15,6 +15,6 @@ namespace ComInLan.Model
 		int Port { get; }
 		String Checksum { get; }
 		long RefreshTime { get; }
-		bool IsConnected { get; }
+		ServerState State { get; }
 	}
 }

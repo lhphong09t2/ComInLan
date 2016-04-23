@@ -27,7 +27,7 @@ namespace ComInLan.Model
 
 		public long RefreshTime { get; set; }
 
-		public bool IsConnected { get; set; }
+		public ServerState State { get; set; }
 
 		public void Refresh()
 		{

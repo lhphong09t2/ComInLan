@@ -1,8 +1,8 @@
 package com.onballgroup.cominlan.model.packet;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
-import com.onballgroup.cominlan.model.Base.IBaseModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -13,6 +13,10 @@ public class ClientPacket<T>  extends BaseModel implements IClientPacket<T> {
     private String _name;
     private ClientPacketType _type;
     private T _data;
+
+    public ClientPacket() {
+        super();
+    }
 
     public ClientPacket(JSONObject jsonObject) {
         super(jsonObject);
@@ -56,7 +60,17 @@ public class ClientPacket<T>  extends BaseModel implements IClientPacket<T> {
     }
 
     @Override
-    public String getJson(IBaseModel model) {
-        return null;
+    public JSONObject createJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("Id", _id);
+            jsonObject.put("Name", _name);
+            jsonObject.put("Type", _id);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  jsonObject;
     }
 }

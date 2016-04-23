@@ -1,7 +1,6 @@
 package com.onballgroup.cominlan.model;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
-import com.onballgroup.cominlan.model.Base.IBaseModel;
 
 import org.json.JSONObject;
 
@@ -17,15 +16,17 @@ public class Server extends BaseModel implements IServer {
     private int _port;
     private String _checksum;
     private long _refreshTime;
-    private boolean _isConnected;
+    private ServerState _state;
 
     public Server() {
         refresh();
+        _state = ServerState.None;
     }
 
     public Server(JSONObject jsonObject) {
         super(jsonObject);
         refresh();
+        _state = ServerState.None;
     }
 
     @Override
@@ -75,12 +76,17 @@ public class Server extends BaseModel implements IServer {
     }
 
     @Override
-    public boolean isConnected() {
-        return _isConnected;
+    public ServerState getState() {
+        return _state;
     }
 
-    public void setConnected(boolean value) {
-        _isConnected = value;
+    public void setState(ServerState state) {
+        _state = state;
+
+        if (_onServerStateListener != null)
+        {
+            _onServerStateListener.onStateChanged(this, state);
+        }
     }
 
     public void calculateChecksum() {
@@ -96,8 +102,16 @@ public class Server extends BaseModel implements IServer {
 
     }
 
+    // Events
+    private OnServerStateListener _onServerStateListener;
+
     @Override
-    public String getJson(IBaseModel model) {
+    public void setOnServerStateListener(OnServerStateListener listener) {
+        _onServerStateListener = listener;
+    }
+
+    @Override
+    public JSONObject createJsonObject() {
         return null;
     }
 }

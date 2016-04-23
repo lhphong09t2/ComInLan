@@ -7,6 +7,6 @@ import org.json.JSONObject;
  */
 public interface IBaseModel {
     void create(JSONObject jsonObject);
-    String getJson(IBaseModel model);
+    JSONObject createJsonObject();
     JSONObject getDataJsonObject();
 }

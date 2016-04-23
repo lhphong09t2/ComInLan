@@ -1,7 +1,6 @@
 package com.onballgroup.cominlan.model.protocol;
 
 import com.onballgroup.cominlan.model.Base.BaseModel;
-import com.onballgroup.cominlan.model.Base.IBaseModel;
 
 import org.json.JSONObject;
 
@@ -11,6 +10,10 @@ import org.json.JSONObject;
 public class ClientProtocol  extends BaseModel implements IClientProtocol {
     ClientCommand _command;
     Object _data;
+
+    public ClientProtocol() {
+        super();
+    }
 
     public ClientProtocol(JSONObject jsonObject) {
         super(jsonObject);
@@ -39,7 +42,7 @@ public class ClientProtocol  extends BaseModel implements IClientProtocol {
     }
 
     @Override
-    public String getJson(IBaseModel model) {
+    public JSONObject createJsonObject() {
         return null;
     }
 }
