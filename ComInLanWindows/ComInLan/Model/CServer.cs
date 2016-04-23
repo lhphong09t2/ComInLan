@@ -4,27 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace ComInLan.Model
 {
-	public class Client : BaseModel, IClient
+	public class CServer : BaseModel, IServer
 	{
 		//--------------Created from packet------------------//
-		public string Id { get; set;  }
+		public string Id { get; set; }
 
 		public string Name { get; set; }
 
+		public int Port { get; set; }
 
 
 		//--------------Created by app------------------//
+		public IPAddress Address { get; set; }
+
+		public string Checksum { get; private set; }
 
 		public long RefreshTime { get; private set; }
 
-		public ServerState State { get; set; }
+		public ClientState State { get; set; }
 
 		public void Refresh()
 		{
 			RefreshTime = GetCurrentUnixTimestamp();
+		}
+
+		public void CalculateChecksum()
+		{
+			Checksum = CalculateChecksum(Id + Name);
 		}
 	}
 }

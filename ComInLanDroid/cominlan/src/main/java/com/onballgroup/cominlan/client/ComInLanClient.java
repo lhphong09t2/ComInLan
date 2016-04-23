@@ -3,7 +3,7 @@ package com.onballgroup.cominlan.client;
 import android.app.Activity;
 
 import com.onballgroup.cominlan.model.IServer;
-import com.onballgroup.cominlan.model.Server;
+import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.ServerState;
 import com.onballgroup.cominlan.model.packet.ClientPacket;
 import com.onballgroup.cominlan.model.packet.ClientPacketType;
@@ -41,7 +41,19 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
     @Override
     protected void handleDatapacket(IServerPacket dataPacket) {
+        CServer server = null;
+        for (IServer item : getServers()) {
+            if (item.getId().equals(dataPacket.getId()))
+            {
+                server = (CServer)item;
+                break;
+            }
+        }
 
+        if (server != null)
+        {
+            server.callIDataReceived(dataPacket.getDataJson());
+        }
     }
 
     @Override
@@ -52,11 +64,20 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
            return;
        }
 
-        ((Server) server).setState(ServerState.Waiting);
+        ((CServer) server).setState(ServerState.Waiting);
 
         ClientProtocol protocol = new ClientProtocol();
         protocol.setCommand(ClientCommand.RequestConnect);
-        sendClientPacket(ClientPacketType.Protocol, protocol.getDataJson(), server);
+        protocol.setDataJson(String.valueOf(getListeningPort()));
+        sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
+    }
+
+    @Override
+    public void sendPasscode(IServer server, String passcode) {
+        ClientProtocol protocol = new ClientProtocol();
+        protocol.setCommand(ClientCommand.RequestConnect);
+        protocol.setDataJson(passcode);
+        sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
     }
 
     @Override
@@ -74,7 +95,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         ClientPacket clientPacket = new ClientPacket();
         clientPacket.setId(UUID.randomUUID().toString());
         clientPacket.setName(_name);
-        clientPacket.setType(ClientPacketType.Protocol);
+        clientPacket.setType(type);
         clientPacket.setDataJson(dataJson);
 
         sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());

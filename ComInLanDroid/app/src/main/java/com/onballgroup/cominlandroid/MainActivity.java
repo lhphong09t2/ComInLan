@@ -66,7 +66,16 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         }
     }
 
-    public void sendButtonClick(View v) {
+    public void sendPasscodeButtonClick(View v) {
+        IServer server = (IServer)_serverListView.getSelectedItem();
+
+        if (server != null)
+        {
+            _comInLanClient.sendPasscode(server, _dataEditText.getText().toString());
+        }
+    }
+
+    public void sendPButtonClick(View v) {
         _serverListView.getSelectedItem();
     }
 

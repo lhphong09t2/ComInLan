@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Server
 {
+	public delegate void ClientEventHandler(IClient client);
+	public delegate void ClientsEventHandler(List<IClient> clients);
+
 	public interface IComInLanServer : IBroadcastServer
 	{
-		List<IClient> ConfirmingClients { get; }
-		List<IClient> ConnectedClients { get; }
-		List<IClient> BlackClients { get; }
-		List<IClient> WhiteClients { get; }
+		event ClientEventHandler ClientNew;
+		event ClientEventHandler ClientChanged;
+		event ClientEventHandler ClientRemoved;
+		event ClientsEventHandler ClientsChanged;
+
+		List<IClient> Clients { get; }
 	}
 }

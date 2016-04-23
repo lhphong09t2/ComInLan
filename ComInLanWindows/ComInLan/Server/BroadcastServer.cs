@@ -98,18 +98,19 @@ namespace ComInLan.Server
 					HandleRefreshPacket(clientPacket);
 					break;
 				case ClientPacketType.Protocol:
-					HandleDatapacket(clientPacket);
+					HandleProtocolPacket(clientPacket, address);
 					break;
 				case ClientPacketType.Data:
-					HandleDatapacket(clientPacket);
+					HandleDataPacket(clientPacket);
 					break;
 			}
 		}
+
 		protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
 
-		protected abstract void HandleProtocolPacket(ClientPacket protocolPacket);
+		protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
 
-		protected abstract void HandleDatapacket(ClientPacket dataPacket);
+		protected abstract void HandleDataPacket(ClientPacket dataPacket);
 
 		private void Advertise()
 		{

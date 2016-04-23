@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,7 @@
     <Compile Include="Model\Base\BaseModel.cs" />
     <Compile Include="Model\Base\IBaseModel.cs" />
     <Compile Include="Model\BroadcastData.cs" />
-    <Compile Include="Model\Client.cs" />
+    <Compile Include="Model\CClient.cs" />
     <Compile Include="Model\Packet\ClientPacket.cs" />
     <Compile Include="Client\ComInLanClient.cs" />
     <Compile Include="Server\ComInLanServer.cs" />
@@ -73,7 +74,7 @@
     <Compile Include="Model\Protocol\IServerProtocol.cs" />
     <Compile Include="Model\Protocol\ServerCommand.cs" />
     <Compile Include="Model\Protocol\ServerProtocol.cs" />
-    <Compile Include="Model\Server.cs" />
+    <Compile Include="Model\CServer.cs" />
     <Compile Include="NetworkUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Packet\ServerPacket.cs" />

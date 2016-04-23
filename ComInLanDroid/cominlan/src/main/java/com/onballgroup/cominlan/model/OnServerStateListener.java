@@ -5,4 +5,5 @@ package com.onballgroup.cominlan.model;
  */
 public interface OnServerStateListener {
     void onStateChanged(IServer server, ServerState state);
+    void onDataReceived(IServer server, String jsonData);
 }

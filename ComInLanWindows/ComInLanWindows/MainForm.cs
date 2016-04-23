@@ -12,11 +12,49 @@ namespace ComInLanWindows
 		{
 			InitializeComponent();
 
-			_server = new ComInLanServer();
-			listenAtPort.Text = "Listen at " + _server.ListeningPort;
+			_server = new ComInLanServer(this);
+			_server.ClientNew += _server_ClientNew;
+			_server.ClientChanged += _server_ClientChanged;
+			_server.ClientRemoved += _server_ClientRemoved;
+			_server.ClientsChanged += _server_ClientsChanged;
 
+			listenAtPort.Text = "Listen at " + _server.ListeningPort;
 			inputText.Text = Environment.MachineName;
 			idText.Text = _server.Id.ToString();
+		}
+
+		private void _server_ClientsChanged(System.Collections.Generic.List<ComInLan.Model.IClient> clients)
+		{
+			WriteLine("Clients count: " + clients.Count);
+		}
+
+		private void _server_ClientRemoved(ComInLan.Model.IClient client)
+		{
+			WriteLine("Remove: " + client.Id + " " + client.Name + " " + client.Port + " " + client.Address);
+		}
+
+		private void _server_ClientChanged(ComInLan.Model.IClient client)
+		{
+			WriteLine("Change: " + client.Id + " " + client.Name + " " + client.Port + " " + client.Address);
+		}
+
+		private void _server_ClientNew(ComInLan.Model.IClient client)
+		{
+			WriteLine("New: " + client.Id + " " + client.Name + " " + client.Port + " " + client.Address);
+			WriteLine("State: " + client.State.ToString());
+
+			client.PasscodeCreated += Client_PasscodeCreated;
+			client.StateChanged += Client_StateChanged;
+		}
+
+		private void Client_StateChanged(ComInLan.Model.IClient client)
+		{
+			WriteLine("State changed: " + client.State.ToString());
+		}
+
+		private void Client_PasscodeCreated(ComInLan.Model.IClient client)
+		{
+			WriteLine("Passcode: " + client.Passcode);
 		}
 
 		private void startButton_Click(object sender, EventArgs e)
@@ -41,6 +79,11 @@ namespace ComInLanWindows
 		{
 			_server.ChangId();
 			idText.Text = _server.Id.ToString();
+		}
+
+		private void WriteLine(string content)
+		{
+			outputText.Text = content + System.Environment.NewLine + outputText.Text;
 		}
 	}
 }

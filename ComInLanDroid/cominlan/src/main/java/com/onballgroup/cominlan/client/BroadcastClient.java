@@ -6,7 +6,7 @@ import com.onballgroup.cominlan.NetworkUtility;
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.IBroadcastData;
 import com.onballgroup.cominlan.model.IServer;
-import com.onballgroup.cominlan.model.Server;
+import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.packet.ServerPacket;
 
@@ -152,7 +152,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     }
 
     private void handleBroadcastPacket(final IServerPacket broadcastPacket, InetAddress address) {
-        final Server server = new Server();
+        final CServer server = new CServer();
 
         IBroadcastData data = new BroadcastData();
         data.create(broadcastPacket.getDataJson());
@@ -163,10 +163,10 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         server.setPort(data.getListeningPort());
         server.calculateChecksum();
 
-        Server temp = null;
+        CServer temp = null;
         for (IServer object : _servers) {
             if (object.getId().equals(broadcastPacket.getId())) {
-                temp = (Server) object;
+                temp = (CServer) object;
             }
         }
 
@@ -188,7 +188,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 temp.calculateChecksum();
                 temp.refresh();
 
-                final Server temp2 = temp;
+                final CServer temp2 = temp;
 
                 _activity.runOnUiThread(new Runnable() {
                     @Override

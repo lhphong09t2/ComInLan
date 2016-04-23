@@ -7,13 +7,13 @@ import java.net.InetAddress;
 /**
  * Created by Phong Le on 4/20/2016.
  */
-public class Server extends BaseModel implements IServer {
+public class CServer extends BaseModel implements IServer {
     //--------------Created from packet------------------//
     private String _id;
     private String _name;
     private int _port;
 
-    public Server() {
+    public CServer() {
         refresh();
         _state = ServerState.None;
     }
@@ -37,15 +37,6 @@ public class Server extends BaseModel implements IServer {
     }
 
     @Override
-    public InetAddress getAddress() {
-        return _address;
-    }
-
-    public void setAddress(InetAddress address) {
-        _address = address;
-    }
-
-    @Override
     public int getPort() {
         return _port;
     }
@@ -59,6 +50,15 @@ public class Server extends BaseModel implements IServer {
     private String _checksum;
     private long _refreshTime;
     private ServerState _state;
+
+    @Override
+    public InetAddress getAddress() {
+        return _address;
+    }
+
+    public void setAddress(InetAddress address) {
+        _address = address;
+    }
 
     @Override
     public String getChecksum() {
@@ -85,11 +85,19 @@ public class Server extends BaseModel implements IServer {
     }
 
     public void calculateChecksum() {
-        _checksum = calculateChecksum(_id + _name + _address + _port);
+        _checksum = calculateChecksum(_id + _name);
     }
 
     public void refresh() {
         _refreshTime = getCurrentUnixTimestamp();
+    }
+
+    public void callIDataReceived(String dataJson)
+    {
+        if (_onServerStateListener != null)
+        {
+            _onServerStateListener.onDataReceived(this, dataJson);
+        }
     }
 
     // Events

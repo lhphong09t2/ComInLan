@@ -32,11 +32,11 @@
 			this.inputText = new System.Windows.Forms.TextBox();
 			this.nameLabel = new System.Windows.Forms.Label();
 			this.resultLabel = new System.Windows.Forms.Label();
-			this.outputText = new System.Windows.Forms.TextBox();
 			this.listenAtPort = new System.Windows.Forms.Label();
 			this.idText = new System.Windows.Forms.TextBox();
 			this.idLabel = new System.Windows.Forms.Label();
 			this.changIdButton = new System.Windows.Forms.Button();
+			this.outputText = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// startButton
@@ -75,16 +75,6 @@
 			this.resultLabel.TabIndex = 2;
 			this.resultLabel.Text = "Result";
 			// 
-			// outputText
-			// 
-			this.outputText.Enabled = false;
-			this.outputText.Location = new System.Drawing.Point(12, 99);
-			this.outputText.Multiline = true;
-			this.outputText.Name = "outputText";
-			this.outputText.Size = new System.Drawing.Size(367, 168);
-			this.outputText.TabIndex = 1;
-			this.outputText.TextChanged += new System.EventHandler(this.inputText_TextChanged);
-			// 
 			// listenAtPort
 			// 
 			this.listenAtPort.AutoSize = true;
@@ -122,6 +112,16 @@
 			this.changIdButton.UseVisualStyleBackColor = true;
 			this.changIdButton.Click += new System.EventHandler(this.changIdButton_Click);
 			// 
+			// outputText
+			// 
+			this.outputText.Enabled = false;
+			this.outputText.Location = new System.Drawing.Point(12, 99);
+			this.outputText.Multiline = true;
+			this.outputText.Name = "outputText";
+			this.outputText.Size = new System.Drawing.Size(367, 168);
+			this.outputText.TabIndex = 1;
+			this.outputText.TextChanged += new System.EventHandler(this.inputText_TextChanged);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -149,11 +149,11 @@
         private System.Windows.Forms.TextBox inputText;
         private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.Label resultLabel;
-        private System.Windows.Forms.TextBox outputText;
         private System.Windows.Forms.Label listenAtPort;
         private System.Windows.Forms.TextBox idText;
         private System.Windows.Forms.Label idLabel;
         private System.Windows.Forms.Button changIdButton;
-    }
+		private System.Windows.Forms.TextBox outputText;
+	}
 }
 

@@ -8,6 +8,7 @@ import com.onballgroup.cominlan.model.IServer;
 public interface IComInLanClient extends IBroadcastClient {
     String getName();
     void connect(IServer server);
+    void sendPasscode(IServer server, String passcode);
     void disconnect(IServer server);
     void sendData(String dataJson, IServer server);
 }

@@ -8,5 +8,8 @@ namespace ComInLan.Model
 {
 	public enum ClientState
 	{
+		WaitingPasscode,
+		Accepted,
+		Refused,
 	}
 }
