@@ -7,5 +7,4 @@ import com.onballgroup.cominlan.model.Base.IJson;
  */
 public interface IClientProtocol extends IJson {
     ClientCommand getCommand();
-    Object getData();
 }

@@ -33,7 +33,16 @@ public class BroadcastData extends Json implements IBroadcastData {
     }
 
     @Override
-    public String createJson() {
-        return null;
+    public String createJson()
+    {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ListeningPort", _listeningPort);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  jsonObject.toString();
     }
 }

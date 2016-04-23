@@ -96,9 +96,4 @@ public class Server extends BaseModel implements IServer {
     public void setOnServerStateListener(OnServerStateListener listener) {
         _onServerStateListener = listener;
     }
-
-    @Override
-    public String createJson() {
-        return null;
-    }
 }

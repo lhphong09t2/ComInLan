@@ -63,6 +63,17 @@ public class ServerPacket<T>  extends Json implements IServerPacket {
 
     @Override
     public String createJson() {
-        return null;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("Id", _id);
+            jsonObject.put("DomainId", _domainId);
+            jsonObject.put("Name", _name);
+            jsonObject.put("Type",  _type);
+            jsonObject.put("DataJson", getDataJson());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  jsonObject.toString();
     }
 }

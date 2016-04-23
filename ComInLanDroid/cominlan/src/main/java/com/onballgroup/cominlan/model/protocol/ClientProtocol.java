@@ -10,7 +10,6 @@ import org.json.JSONObject;
  */
 public class ClientProtocol  extends Json implements IClientProtocol {
     ClientCommand _command;
-    Object _data;
 
     @Override
     public ClientCommand getCommand() {
@@ -22,16 +21,15 @@ public class ClientProtocol  extends Json implements IClientProtocol {
     }
 
     @Override
-    public Object getData() {
-        return _data;
-    }
-
-    public void setData(Object data) {
-        _data = data;
-    }
-
-    @Override
     public void create(String json) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+
+            _command = ClientCommand.values()[jsonObject.getInt("Command")];
+            setDataJson(jsonObject.getString("DataJson"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -40,6 +38,7 @@ public class ClientProtocol  extends Json implements IClientProtocol {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("Command", _command);
+            jsonObject.put("DataJson", getDataJson());
         } catch (JSONException e) {
             e.printStackTrace();
         }

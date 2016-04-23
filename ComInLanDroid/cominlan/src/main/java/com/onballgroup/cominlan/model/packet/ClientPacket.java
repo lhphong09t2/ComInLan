@@ -38,7 +38,16 @@ public class ClientPacket extends Json implements IClientPacket {
 
     @Override
     public void create(String json) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
 
+            _id = jsonObject.getString("Id");
+            _name = jsonObject.getString("Name");
+            _type = ClientPacketType.Protocol.values()[jsonObject.getInt("Type")];
+            setDataJson(jsonObject.getString("DataJson"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -49,7 +58,6 @@ public class ClientPacket extends Json implements IClientPacket {
             jsonObject.put("Name", _name);
             jsonObject.put("Type",  _type);
             jsonObject.put("DataJson", getDataJson());
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

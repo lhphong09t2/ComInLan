@@ -6,4 +6,5 @@ package com.onballgroup.cominlan.model.Base;
 public interface IJson extends IBaseModel {
     void create(String json);
     String getDataJson();
+    String createJson();
 }
