@@ -9,9 +9,9 @@ namespace ComInLan.Model.Packet
 {
 	public class ServerPacket : Json, IServerPacket
 	{
-		public string DomainId { get; set; }
-
 		public string Id { get; set; }
+
+		public string DomainId { get; set; }
 
 		public string Name { get; set; }
 

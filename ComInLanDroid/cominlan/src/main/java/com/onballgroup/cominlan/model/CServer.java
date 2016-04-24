@@ -47,9 +47,9 @@ public class CServer extends BaseModel implements IServer {
 
     //--------------Created by app------------------//
     private InetAddress _address;
+    private ServerState _state;
     private String _checksum;
     private long _refreshTime;
-    private ServerState _state;
 
     @Override
     public InetAddress getAddress() {
@@ -58,6 +58,20 @@ public class CServer extends BaseModel implements IServer {
 
     public void setAddress(InetAddress address) {
         _address = address;
+    }
+
+    @Override
+    public ServerState getState() {
+        return _state;
+    }
+
+    public void setState(ServerState state) {
+        _state = state;
+
+        if (_onServerListener != null)
+        {
+            _onServerListener.onStateChanged(this);
+        }
     }
 
     @Override
@@ -70,20 +84,7 @@ public class CServer extends BaseModel implements IServer {
         return _refreshTime;
     }
 
-    @Override
-    public ServerState getState() {
-        return _state;
-    }
-
-    public void setState(ServerState state) {
-        _state = state;
-
-        if (_onServerStateListener != null)
-        {
-            _onServerStateListener.onStateChanged(this);
-        }
-    }
-
+    //--------------Methods------------------//
     public void calculateChecksum() {
         _checksum = calculateChecksum(_id + _name);
     }
@@ -92,19 +93,19 @@ public class CServer extends BaseModel implements IServer {
         _refreshTime = getCurrentUnixTimestamp();
     }
 
-    public void callIDataReceived(String dataJson)
-    {
-        if (_onServerStateListener != null)
-        {
-            _onServerStateListener.onDataReceived(this);
-        }
-    }
-
-    // Events
-    private OnServerStateListener _onServerStateListener;
+    //--------------Events------------------//
+    private OnServerListener _onServerListener;
 
     @Override
-    public void setOnServerStateListener(OnServerStateListener listener) {
-        _onServerStateListener = listener;
+    public void setOnServerListener(OnServerListener listener) {
+        _onServerListener = listener;
+    }
+
+    public void callIDataReceived(String dataJson)
+    {
+        if (_onServerListener != null)
+        {
+            _onServerListener.onDataReceived(this);
+        }
     }
 }

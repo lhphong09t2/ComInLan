@@ -10,7 +10,7 @@ namespace ComInLan.Model
 	{
 		None,
 		Waiting,
-		RequestPasscode,
+		PasscodeRequested,
 		PasscodeSent,
 		Connected
 	}

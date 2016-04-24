@@ -14,6 +14,9 @@ public interface IClient extends IBaseModel {
 
     InetAddress getAddress();
     String getPasscode();
-    long getRefreshTime();
     ClientState getState();
+    String getChecksum();
+    long getRefreshTime();
+
+    void setOnClientListener(OnClientListener listener);
 }

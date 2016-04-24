@@ -43,7 +43,7 @@ public class ClientPacket extends Json implements IClientPacket {
 
             _id = jsonObject.getString("Id");
             _name = jsonObject.getString("Name");
-            _type = ClientPacketType.Protocol.values()[jsonObject.getInt("Type")];
+            _type = ClientPacketType.values()[jsonObject.getInt("Type")];
             setDataJson(jsonObject.getString("DataJson"));
         } catch (JSONException e) {
             e.printStackTrace();

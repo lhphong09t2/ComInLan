@@ -17,24 +17,56 @@ namespace ComInLan.Model
 
 		public int Port { get; set; }
 
+		public CServer()
+		{
+			Refresh();
+			State = ServerState.None;
+		}
 
 		//--------------Created by app------------------//
 		public IPAddress Address { get; set; }
+
+		private ServerState _state;
+		public ServerState State
+		{
+			get { return _state; }
+			set
+			{
+				_state = value;
+
+				if (StateChanged != null)
+				{
+					StateChanged(this);
+				}
+			}
+		}
 
 		public string Checksum { get; private set; }
 
 		public long RefreshTime { get; private set; }
 
-		public ClientState State { get; set; }
+
+		//--------------Methods------------------//
+		public void CalculateChecksum()
+		{
+			Checksum = CalculateChecksum(Id + Name);
+		}
 
 		public void Refresh()
 		{
 			RefreshTime = GetCurrentUnixTimestamp();
 		}
 
-		public void CalculateChecksum()
+		//--------------Events------------------//
+		public event ServerStateEventHandler StateChanged;
+		public event SeverDataEventHandler DataReceived;
+
+		public void CallIDataReceived(String dataJson)
 		{
-			Checksum = CalculateChecksum(Id + Name);
+			if (DataReceived != null)
+			{
+				DataReceived(this);
+			}
 		}
 	}
 }

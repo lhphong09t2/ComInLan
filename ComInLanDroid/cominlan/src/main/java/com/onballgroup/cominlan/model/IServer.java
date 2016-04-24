@@ -13,9 +13,9 @@ public interface IServer extends IBaseModel {
     int getPort();
 
     InetAddress getAddress();
-    String getChecksum();
     ServerState getState();
+    String getChecksum();
     long getRefreshTime();
 
-    void setOnServerStateListener(OnServerStateListener listener);
+    void setOnServerListener(OnServerListener listener);
 }

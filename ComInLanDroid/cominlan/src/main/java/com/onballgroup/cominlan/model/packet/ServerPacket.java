@@ -8,7 +8,7 @@ import org.json.JSONObject;
 /**
  * Created by Phong Le on 4/17/2016.
  */
-public class ServerPacket<T>  extends Json implements IServerPacket {
+public class ServerPacket<T> extends Json implements IServerPacket {
     private String _id;
     private String _domainId;
     private String _name;
@@ -37,13 +37,17 @@ public class ServerPacket<T>  extends Json implements IServerPacket {
         return _name;
     }
 
-    @Override
-    public ServerPacketType getType() { return _type; }
-
-    public void setType(ServerPacketType type) { _type = type; }
-
     public void setName(String name) {
         _name = name;
+    }
+
+    @Override
+    public ServerPacketType getType() {
+        return _type;
+    }
+
+    public void setType(ServerPacketType type) {
+        _type = type;
     }
 
     @Override
@@ -68,12 +72,12 @@ public class ServerPacket<T>  extends Json implements IServerPacket {
             jsonObject.put("Id", _id);
             jsonObject.put("DomainId", _domainId);
             jsonObject.put("Name", _name);
-            jsonObject.put("Type",  _type);
+            jsonObject.put("Type", _type);
             jsonObject.put("DataJson", getDataJson());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return  jsonObject.toString();
+        return jsonObject.toString();
     }
 }

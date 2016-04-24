@@ -78,7 +78,7 @@ public abstract class NetworkUtility {
     }
 
     protected void stopUdp() {
-        _udpListenerThread.interrupt();;
+        _udpListenerThread.interrupt();
         _udpListenerSocket.close();
     }
 

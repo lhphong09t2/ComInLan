@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.onballgroup.cominlan.client.ComInLanClient;
 import com.onballgroup.cominlan.client.OnBroadcastClientListener;
 import com.onballgroup.cominlan.model.IServer;
-import com.onballgroup.cominlan.model.OnServerStateListener;
+import com.onballgroup.cominlan.model.OnServerListener;
 import com.onballgroup.cominlan.model.ServerState;
 
 import java.util.List;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         _serverListView.setItemChecked(position, true);
 
         IServer server = _arrayAdapter.getItem(position);
-        server.setOnServerStateListener(new OnServerStateListener() {
+        server.setOnServerListener(new OnServerListener() {
             @Override
             public void onStateChanged(IServer server) {
                 _arrayAdapter.notifyDataSetChanged();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
                         _sendButton.setEnabled(false);
                     }
 
-                    if (server.getState() == ServerState.RequestPasscode) {
+                    if (server.getState() == ServerState.PasscodeRequested) {
                         _sendPasscodeButon.setEnabled(true);
                     } else {
                         _sendPasscodeButon.setEnabled(false);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
             _sendPasscodeButon.setEnabled(false);
         }
 
-        if (server.getState() == ServerState.RequestPasscode) {
+        if (server.getState() == ServerState.PasscodeRequested) {
             _sendButton.setEnabled(true);
         } else {
             _sendPasscodeButon.setEnabled(false);

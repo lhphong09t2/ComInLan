@@ -27,7 +27,7 @@ public abstract class BaseModel implements IBaseModel {
         return null;
     }
 
-    public static  long getCurrentUnixTimestamp()
+    public static long getCurrentUnixTimestamp()
     {
         return System.currentTimeMillis() / 1000;
     }

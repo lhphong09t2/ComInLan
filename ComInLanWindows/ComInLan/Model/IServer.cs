@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model
 {
+	public delegate void ServerStateEventHandler(IServer server);
+	public delegate void SeverDataEventHandler(IServer server);
+
 	public interface IServer
 	{
 		string Id { get; }
@@ -14,8 +17,11 @@ namespace ComInLan.Model
 		int Port { get; }
 
 		IPAddress Address { get; }
+		ServerState State { get; }
 		String Checksum { get; }
 		long RefreshTime { get; }
-		ClientState State { get; }
+
+		event ServerStateEventHandler StateChanged;
+		event SeverDataEventHandler DataReceived;
 	}
 }

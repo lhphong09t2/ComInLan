@@ -10,10 +10,6 @@ namespace ComInLan.Model
 {
 	public class CClient : BaseModel, IClient
 	{
-		public event ClientPasscodeEventHandler PasscodeCreated;
-		public event ClientStateEventHandler StateChanged;
-		public event ClientDataEventHandler DataReceived;
-
 		//--------------Created from packet------------------//
 		public string Id { get; set;  }
 
@@ -21,10 +17,13 @@ namespace ComInLan.Model
 
 		public int Port { get; set; }
 
+		public CClient()
+		{
+			State = ClientState.None;
+		}
+
 		//--------------Created by app------------------//
 		public IPAddress Address { get; set; }
-
-		public string Checksum { get; private set; }
 
 		private string _passcode;
 		public string Passcode
@@ -44,8 +43,6 @@ namespace ComInLan.Model
 			}
 		}
 
-		public long RefreshTime { get; private set; }
-
 		private ClientState _state;
 		public ClientState State
 		{
@@ -61,22 +58,32 @@ namespace ComInLan.Model
 			}
 		}
 
+		public string Checksum { get; private set; }
+
+		public long RefreshTime { get; private set; }
+
+		//--------------Methods------------------//
 		public void Refresh()
 		{
 			RefreshTime = GetCurrentUnixTimestamp();
 		}
 
+		public void CalculateChecksum()
+		{
+			Checksum = CalculateChecksum(Id + Name);
+		}
+
+		//--------------Events------------------//
+		public event ClientPasscodeEventHandler PasscodeCreated;
+		public event ClientStateEventHandler StateChanged;
+		public event ClientDataEventHandler DataReceived;
+
 		public void CallDataReceived(String dataJson)
 		{
 			if (DataReceived != null)
 			{
-				DataReceived(this, dataJson);
+				DataReceived(this);
 			}
-		}
-
-		public void CalculateChecksum()
-		{
-			Checksum = CalculateChecksum(Id + Name);
 		}
 	}
 }

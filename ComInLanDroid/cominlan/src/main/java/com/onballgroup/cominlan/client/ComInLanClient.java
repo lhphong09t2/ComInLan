@@ -101,7 +101,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
     @Override
     public void sendPasscode(IServer server, String passcode) {
-        if (server.getState() == ServerState.RequestPasscode)
+        if (server.getState() == ServerState.PasscodeRequested)
         {
             ClientProtocol protocol = new ClientProtocol();
             protocol.setCommand(ClientCommand.RequestConnect);
@@ -143,7 +143,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                server.setState(ServerState.RequestPasscode);
+                server.setState(ServerState.PasscodeRequested);
             }
         });
     }
