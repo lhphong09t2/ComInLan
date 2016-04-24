@@ -67,23 +67,6 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    protected void handleDatapacket(IServerPacket dataPacket) {
-        CServer server = null;
-        for (IServer item : getServers()) {
-            if (item.getId().equals(dataPacket.getId()))
-            {
-                server = (CServer)item;
-                break;
-            }
-        }
-
-        if (server != null)
-        {
-            server.callIDataReceived(dataPacket.getDataJson());
-        }
-    }
-
-    @Override
     public void connect(IServer server)
     {
        if (server.getState() != ServerState.None)

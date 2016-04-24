@@ -11,15 +11,13 @@ using System.Net;
 namespace ComInLan.Server
 {
 	public class ComInLanServer : BroadcastServer, IComInLanServer
-	{
-		public event ClientEventHandler ClientNew;
-		public event ClientEventHandler ClientChanged;
-		public event ClientEventHandler ClientRemoved;
-		public event ClientsEventHandler ClientsChanged;
+    {
+        public event ClientEventHandler ClientNew;
+        public event ClientEventHandler ClientRemoved;
+        public event ClientEventHandler ClientChanged;
+        public event ClientsEventHandler ClientsChanged;
 
-		public List<IClient> Clients { get; private set; }
-
-		public override string DomainId
+        public override string DomainId
 		{
 			get
 			{
@@ -27,13 +25,7 @@ namespace ComInLan.Server
 			}
 		}
 
-		protected Control Control { get; private set; }
-
-		public ComInLanServer(Control control)
-		{
-			Clients = new List<IClient>();
-			Control = control;
-		}
+		public ComInLanServer(Control control) : base(control)	{}
 
 		protected override void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address)
 		{
@@ -53,43 +45,30 @@ namespace ComInLan.Server
 			}
 		}
 
-		protected override void HandleDataPacket(ClientPacket dataPacket)
-		{
-			var client = Clients.FirstOrDefault(x => x.Id == dataPacket.Id && x.State == ClientState.Accepted) as CClient;
+        protected override void HandleRefreshPacket(ClientPacket freshPacket)
+        {
+            var client = Clients.FirstOrDefault(x => x.Id == freshPacket.Id) as CClient;
 
-			if (client != null)
-			{
-				Control.Invoke((MethodInvoker)delegate
-				{
-					client.CallDataReceived(dataPacket.DataJson);
-				});
-			}
-		}
+            if (client != null)
+            {
+                client.Refresh();
 
-		protected override void HandleRefreshPacket(ClientPacket freshPacket)
-		{
-			var client = Clients.FirstOrDefault(x => x.Id == freshPacket.Id) as CClient;
+                if (client.Name != freshPacket.Name)
+                {
+                    client.Name = freshPacket.Name;
 
-			if (client != null)
-			{
-				client.Refresh();
+                    Control.Invoke((MethodInvoker)delegate
+                    {
+                        if (ClientChanged != null)
+                        {
+                            ClientChanged(client);
+                        }
+                    });
+                }
+            }
+        }
 
-				if (client.Name != freshPacket.Name)
-				{
-					client.Name = freshPacket.Name;
-
-					Control.Invoke((MethodInvoker)delegate
-					{
-						if (ClientChanged != null)
-						{
-							ClientChanged(client);
-						}
-					});
-				}
-			}
-		}
-
-		private void HandleRequestConnectCommand(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
+        private void HandleRequestConnectCommand(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == protocolPacket.Id) as CClient;
 

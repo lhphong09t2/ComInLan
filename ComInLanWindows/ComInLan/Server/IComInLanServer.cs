@@ -16,7 +16,5 @@ namespace ComInLan.Server
 		event ClientEventHandler ClientChanged;
 		event ClientEventHandler ClientRemoved;
 		event ClientsEventHandler ClientsChanged;
-
-		List<IClient> Clients { get; }
 	}
 }

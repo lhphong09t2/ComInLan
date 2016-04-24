@@ -201,7 +201,22 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
-    protected abstract void handleProtocolPacket(IServerPacket protocolPacket);
+    private void handleDatapacket(IServerPacket dataPacket)
+    {
+        CServer server = null;
+        for (IServer item : _servers) {
+            if (item.getId().equals(dataPacket.getId()))
+            {
+                server = (CServer)item;
+                break;
+            }
+        }
 
-    protected abstract void handleDatapacket(IServerPacket dataPacket);
+        if (server != null)
+        {
+            server.callIDataReceived(dataPacket.getDataJson());
+        }
+    }
+
+    protected abstract void handleProtocolPacket(IServerPacket protocolPacket);
 }

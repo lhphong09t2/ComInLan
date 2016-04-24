@@ -3,17 +3,20 @@ using ComInLan.Model.Base;
 using ComInLan.Model.Packet;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Timers;
+using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
 namespace ComInLan.Server
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
-	{
-		public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
+    {
+        public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
 		public const int AdvertisingPeriod = 5000;
 
 		public string Id { get { return _broadcastPacket.Id; } }
@@ -29,9 +32,16 @@ namespace ComInLan.Server
 		private Timer _advertisingTimer;
 		private ServerPacket _broadcastPacket;
 
-		public BroadcastServer()
-		{
-			ListeningPort = FindAvaiablePortToListen();
+        public List<IClient> Clients { get; private set; }
+
+        protected Control Control { get; private set; }
+
+        public BroadcastServer(Control control)
+        {
+            Control = control;
+            Clients = new List<IClient>();
+
+            ListeningPort = FindAvaiablePortToListen();
 
 			var broadcastData = new BroadcastData()
 			{
@@ -128,10 +138,23 @@ namespace ComInLan.Server
 				}
 		}
 
-        protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
+
+
+        private void HandleDataPacket(ClientPacket dataPacket)
+        {
+            var client = Clients.FirstOrDefault(x => x.Id == dataPacket.Id && x.State == ClientState.Accepted) as CClient;
+
+            if (client != null)
+            {
+                Control.Invoke((MethodInvoker)delegate
+                {
+                    client.CallDataReceived(dataPacket.DataJson);
+                });
+            }
+        }
 
         protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
 
-        protected abstract void HandleDataPacket(ClientPacket dataPacket);
+        protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
     }
 }
