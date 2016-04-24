@@ -79,6 +79,7 @@ namespace ComInLan.Server
 
 		public virtual void Stop()
 		{
+			StopUdp();
 			_advertisingTimer.Stop();
 			IsRunning = false;
 		}

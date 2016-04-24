@@ -83,12 +83,17 @@ namespace ComInLan
 			{
 				while (!cancellationToken.IsCancellationRequested)
 				{
-					var bytes = _udpClient.Receive(ref _groupEP);
-
-					Task.Factory.StartNew(delegate
+					try
 					{
-						OnUdpDataReceived(Encoding.UTF8.GetString(bytes), _groupEP.Address);
-					});
+						var bytes = _udpClient.Receive(ref _groupEP);
+
+						Task.Factory.StartNew(delegate
+						{
+							OnUdpDataReceived(Encoding.UTF8.GetString(bytes), _groupEP.Address);
+						});
+					}
+					catch
+					{ }
 				}
 
 			}, cancellationToken);
