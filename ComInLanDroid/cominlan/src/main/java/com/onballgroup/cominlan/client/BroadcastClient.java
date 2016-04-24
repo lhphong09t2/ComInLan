@@ -118,7 +118,6 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
         _serverCleanupTimer.cancel();
         _serverCleanupTimer.purge();
-        _serverCleanupTimer = null;
 
         synchronized (_servers) {
             _servers.clear();

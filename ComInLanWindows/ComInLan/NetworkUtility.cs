@@ -47,6 +47,7 @@ namespace ComInLan
 		protected void StopUdp()
 		{
 			_listenCTSource.Cancel();
+			_listenCTSource.Dispose();
 			_udpClient.Close();
 		}
 
