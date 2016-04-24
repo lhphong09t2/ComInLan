@@ -14,7 +14,6 @@ public abstract class NetworkUtility {
     protected final int UdpPacketSizeInByte = 4096;
 
     private DatagramSocket _udpSocket;
-    private Thread _udpListenerThread;
     private DatagramSocket _udpListenerSocket;
 
     protected void initUdp() {
@@ -41,6 +40,7 @@ public abstract class NetworkUtility {
         }).start();
     }
 
+    private Thread _udpListenerThread;
     protected boolean startUdp(int udpListeningPort) {
         try {
             _udpListenerSocket = new DatagramSocket(udpListeningPort);

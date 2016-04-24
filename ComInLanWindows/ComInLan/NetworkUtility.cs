@@ -16,7 +16,6 @@ namespace ComInLan
 
 		private Socket _udpSocket;
 		private UdpClient _udpClient;
-		private IPEndPoint _groupEP;
 
 		protected void InitUdp()
 		{
@@ -28,6 +27,7 @@ namespace ComInLan
 			_udpSocket.SendTo(Encoding.UTF8.GetBytes(dataJson), new IPEndPoint(address, port));
 		}
 
+		private IPEndPoint _groupEP;
 		protected bool StartUdp(int udpListeningPort)
 		{
 			try
