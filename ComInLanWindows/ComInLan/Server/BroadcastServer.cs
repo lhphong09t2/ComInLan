@@ -107,12 +107,6 @@ namespace ComInLan.Server
 			}
 		}
 
-		protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
-
-		protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
-
-		protected abstract void HandleDataPacket(ClientPacket dataPacket);
-
 		private void Advertise()
 		{
 			_broadcastPacket.Name = Name;
@@ -133,5 +127,11 @@ namespace ComInLan.Server
 					}
 				}
 		}
-	}
+
+        protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
+
+        protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
+
+        protected abstract void HandleDataPacket(ClientPacket dataPacket);
+    }
 }
