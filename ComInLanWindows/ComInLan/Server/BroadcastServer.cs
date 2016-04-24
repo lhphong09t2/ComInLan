@@ -15,8 +15,8 @@ using Timer = System.Timers.Timer;
 namespace ComInLan.Server
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
-    {
-        public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
+	{
+		public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
 		public const int AdvertisingPeriod = 5000;
 
 		public string Id { get { return _broadcastPacket.Id; } }
@@ -32,16 +32,16 @@ namespace ComInLan.Server
 		private Timer _advertisingTimer;
 		private ServerPacket _broadcastPacket;
 
-        public List<IClient> Clients { get; private set; }
+		public List<IClient> Clients { get; private set; }
 
-        protected Control Control { get; private set; }
+		protected Control Control { get; private set; }
 
-        public BroadcastServer(Control control)
-        {
-            Control = control;
-            Clients = new List<IClient>();
+		public BroadcastServer(Control control)
+		{
+			Control = control;
+			Clients = new List<IClient>();
 
-            ListeningPort = FindAvaiablePortToListen();
+			ListeningPort = FindAvaiablePortToListen();
 
 			var broadcastData = new BroadcastData()
 			{
@@ -61,7 +61,8 @@ namespace ComInLan.Server
 				AutoReset = true,
 			};
 
-			_advertisingTimer.Elapsed += delegate {
+			_advertisingTimer.Elapsed += delegate
+			{
 				Advertise();
 			};
 
@@ -140,21 +141,21 @@ namespace ComInLan.Server
 
 
 
-        private void HandleDataPacket(ClientPacket dataPacket)
-        {
-            var client = Clients.FirstOrDefault(x => x.Id == dataPacket.Id && x.State == ClientState.Accepted) as CClient;
+		private void HandleDataPacket(ClientPacket dataPacket)
+		{
+			var client = Clients.FirstOrDefault(x => x.Id == dataPacket.Id && x.State == ClientState.Accepted) as CClient;
 
-            if (client != null)
-            {
-                Control.Invoke((MethodInvoker)delegate
-                {
-                    client.CallDataReceived(dataPacket.DataJson);
-                });
-            }
-        }
+			if (client != null)
+			{
+				Control.Invoke((MethodInvoker)delegate
+				{
+					client.CallDataReceived(dataPacket.DataJson);
+				});
+			}
+		}
 
-        protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
+		protected abstract void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address);
 
-        protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
-    }
+		protected abstract void HandleRefreshPacket(ClientPacket freshPacket);
+	}
 }

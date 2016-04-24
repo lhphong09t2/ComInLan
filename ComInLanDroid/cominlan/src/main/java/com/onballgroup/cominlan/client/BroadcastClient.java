@@ -4,9 +4,9 @@ import android.app.Activity;
 
 import com.onballgroup.cominlan.NetworkUtility;
 import com.onballgroup.cominlan.model.BroadcastData;
+import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IBroadcastData;
 import com.onballgroup.cominlan.model.IServer;
-import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.packet.ServerPacket;
 
@@ -162,12 +162,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         server.setPort(data.getListeningPort());
         server.calculateChecksum();
 
-        CServer temp = null;
-        for (IServer object : _servers) {
-            if (object.getId().equals(broadcastPacket.getId())) {
-                temp = (CServer) object;
-            }
-        }
+        CServer temp = getServerById(broadcastPacket.getId());
 
         synchronized (_servers) {
             if (temp == null) {
@@ -203,19 +198,26 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     private void handleDatapacket(IServerPacket dataPacket)
     {
+        CServer server = getServerById(dataPacket.getId());
+
+        if (server != null)
+        {
+            server.callIDataReceived(dataPacket.getDataJson());
+        }
+    }
+
+    protected CServer getServerById(String id)
+    {
         CServer server = null;
-        for (IServer item : _servers) {
-            if (item.getId().equals(dataPacket.getId()))
+        for (IServer item : getServers()) {
+            if (item.getId().equals(id))
             {
                 server = (CServer)item;
                 break;
             }
         }
 
-        if (server != null)
-        {
-            server.callIDataReceived(dataPacket.getDataJson());
-        }
+        return  server;
     }
 
     protected abstract void handleProtocolPacket(IServerPacket protocolPacket);

@@ -11,13 +11,13 @@ using System.Net;
 namespace ComInLan.Server
 {
 	public class ComInLanServer : BroadcastServer, IComInLanServer
-    {
-        public event ClientEventHandler ClientNew;
-        public event ClientEventHandler ClientRemoved;
-        public event ClientEventHandler ClientChanged;
-        public event ClientsEventHandler ClientsChanged;
+	{
+		public event ClientEventHandler ClientNew;
+		public event ClientEventHandler ClientRemoved;
+		public event ClientEventHandler ClientChanged;
+		public event ClientsEventHandler ClientsChanged;
 
-        public override string DomainId
+		public override string DomainId
 		{
 			get
 			{
@@ -25,7 +25,7 @@ namespace ComInLan.Server
 			}
 		}
 
-		public ComInLanServer(Control control) : base(control)	{}
+		public ComInLanServer(Control control) : base(control) { }
 
 		protected override void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address)
 		{
@@ -45,142 +45,149 @@ namespace ComInLan.Server
 			}
 		}
 
-        protected override void HandleRefreshPacket(ClientPacket freshPacket)
-        {
-            var client = Clients.FirstOrDefault(x => x.Id == freshPacket.Id) as CClient;
-
-            if (client != null)
-            {
-                client.Refresh();
-
-                if (client.Name != freshPacket.Name)
-                {
-                    client.Name = freshPacket.Name;
-
-                    Control.Invoke((MethodInvoker)delegate
-                    {
-                        if (ClientChanged != null)
-                        {
-                            ClientChanged(client);
-                        }
-                    });
-                }
-            }
-        }
-
-        private void HandleRequestConnectCommand(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
+		protected override void HandleRefreshPacket(ClientPacket freshPacket)
 		{
-			var client = Clients.FirstOrDefault(x => x.Id == protocolPacket.Id) as CClient;
+			var client = Clients.FirstOrDefault(x => x.Id == freshPacket.Id) as CClient;
 
 			if (client == null)
 			{
-				client = new CClient()
-				{
-					Id = protocolPacket.Id,
-					Name = protocolPacket.Name,
-					Port = int.Parse(protocol.DataJson),
-					Address = address,
-					State = ClientState.WaitingPasscode
-				};
+				return;
+			}
 
-				lock (Clients)
-				{
-					Clients.Add(client);
-				}
+			client.Refresh();
+
+			if (client.Name != freshPacket.Name)
+			{
+				client.Name = freshPacket.Name;
 
 				Control.Invoke((MethodInvoker)delegate
 				{
-					if (ClientNew != null)
+					if (ClientChanged != null)
 					{
-						ClientNew(client);
+						ClientChanged(client);
 					}
-
-					if (ClientsChanged != null)
-					{
-						ClientsChanged(Clients);
-					}
-
-					var generator = new Random();
-					var r = generator.Next(1, 1000000);
-					var passcode = r.ToString().PadLeft(6, '0');
-					client.Passcode = passcode;
 				});
-
-				client.CalculateChecksum();
-				client.Refresh();
-
-				var responseProtocol = new ServerProtocol()
-				{
-					Command = ServerCommand.RequestPasscode
-				};
-
-				var reponsePacket = new ServerPacket()
-				{
-					Id = Id,
-					DomainId = DomainId,
-					Name = Name,
-					Type = ServerPacketType.Protocol,
-					DataJson = JsonConvert.SerializeObject(responseProtocol)
-				};
-
-				SendUdp(JsonConvert.SerializeObject(reponsePacket), client.Address, client.Port);
 			}
+		}
+
+		private void HandleRequestConnectCommand(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
+		{
+			var client = Clients.FirstOrDefault(x => x.Id == protocolPacket.Id) as CClient;
+
+			if (client != null)
+			{
+				return;
+			}
+
+			client = new CClient()
+			{
+				Id = protocolPacket.Id,
+				Name = protocolPacket.Name,
+				Port = int.Parse(protocol.DataJson),
+				Address = address,
+			};
+
+			client.CalculateChecksum();
+			client.Refresh();
+
+			lock (Clients)
+			{
+				Clients.Add(client);
+			}
+
+			Control.Invoke((MethodInvoker)delegate
+			{
+				if (ClientNew != null)
+				{
+					ClientNew(client);
+				}
+
+				if (ClientsChanged != null)
+				{
+					ClientsChanged(Clients);
+				}
+
+				var generator = new Random();
+				var r = generator.Next(1, 1000000);
+				var passcode = r.ToString().PadLeft(6, '0');
+				client.Passcode = passcode;
+			});
+
+			var responseProtocol = new ServerProtocol()
+			{
+				Command = ServerCommand.RequestPasscode
+			};
+
+			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), client);
+
+			Control.Invoke((MethodInvoker)delegate
+			{
+				client.State = ClientState.WaitingPasscode;
+			});
 		}
 
 		private void HandlePasscodeComand(String id, String passcode)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.WaitingPasscode) as CClient;
 
-			if (client != null)
+			if (client == null && client.State != ClientState.WaitingPasscode)
 			{
-				Control.Invoke((MethodInvoker)delegate
-				{
-					client.State = passcode == client.Passcode ? ClientState.Accepted : ClientState.Refused;
-				});
-
-
-				var responseProtocol = new ServerProtocol()
-				{
-					Command = passcode == client.Passcode ? ServerCommand.Accept : ServerCommand.Refuse
-				};
-
-				var reponsePacket = new ServerPacket()
-				{
-					Id = Id,
-					DomainId = DomainId,
-					Name = Name,
-					Type = ServerPacketType.Protocol,
-					DataJson = JsonConvert.SerializeObject(responseProtocol)
-				};
-
-				SendUdp(JsonConvert.SerializeObject(reponsePacket), client.Address, client.Port);
+				return;
 			}
+
+			Control.Invoke((MethodInvoker)delegate
+			{
+				client.State = passcode == client.Passcode ? ClientState.Accepted : ClientState.Refused;
+			});
+
+			var responseProtocol = new ServerProtocol()
+			{
+				Command = passcode == client.Passcode ? ServerCommand.Accept : ServerCommand.Refuse
+			};
+
+			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), client);
 		}
 
 		private void HandleDisconnectCommand(String id)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.Accepted) as CClient;
 
-			if (client != null)
+			if (client == null && client.State != ClientState.Accepted)
 			{
-				lock (Clients)
+				return;
+			}
+
+			lock (Clients)
+			{
+				Clients.Remove(client);
+			}
+
+			Control.Invoke((MethodInvoker)delegate
+			{
+				if (ClientChanged != null)
 				{
-					Clients.Remove(client);
+					ClientRemoved(client);
 				}
 
-				Control.Invoke((MethodInvoker)delegate
+				if (ClientsChanged != null)
 				{
-					if (ClientChanged != null)
-					{
-						ClientRemoved(client);
-					}
+					ClientsChanged(Clients);
+				}
+			});
+		}
 
-					if (ClientsChanged != null)
-					{
-						ClientsChanged(Clients);
-					}
-				});
-			}
+		private void SendServerPacket(ServerPacketType type, string dataJson, IClient client)
+		{
+			var reponsePacket = new ServerPacket()
+			{
+				Id = Id,
+				DomainId = DomainId,
+				Name = Name,
+				Type = ServerPacketType.Protocol,
+				DataJson = dataJson
+			};
+
+			SendUdp(JsonConvert.SerializeObject(reponsePacket), client.Address, client.Port);
 		}
 	}
 }

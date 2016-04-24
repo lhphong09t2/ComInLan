@@ -26,6 +26,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     private String _name;
+
     @Override
     public String getName() {
         return _name;
@@ -37,62 +38,31 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    protected void handleProtocolPacket(IServerPacket protocolPacket) {
-        CServer server = null;
-        for (IServer item : getServers()) {
-            if (item.getId().equals(protocolPacket.getId()) &&
-                    item.getState() == ServerState.Waiting)
-            {
-                server = (CServer)item;
-                break;
-            }
+    public void connect(IServer server) {
+        if (server.getState() != ServerState.None) {
+            return;
         }
-
-        if (server != null)
-        {
-            ServerProtocol protocol = new ServerProtocol();
-            protocol.create(protocolPacket.getDataJson());
-
-            switch (protocol.getCommand())
-            {
-                case RequestPasscode:
-                    handleRequestPasscodeCommand(server);
-                    break;
-                case Accept:
-                case Refuse:
-                    handleResultOfConnecting(server, protocol.getCommand());
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void connect(IServer server)
-    {
-       if (server.getState() != ServerState.None)
-       {
-           return;
-       }
-
-        ((CServer) server).setState(ServerState.Waiting);
 
         ClientProtocol protocol = new ClientProtocol();
         protocol.setCommand(ClientCommand.RequestConnect);
         protocol.setDataJson(String.valueOf(getListeningPort()));
         sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
+
+        ((CServer) server).setState(ServerState.Waiting);
     }
 
     @Override
     public void sendPasscode(IServer server, String passcode) {
-        if (server.getState() == ServerState.PasscodeRequested)
-        {
-            ClientProtocol protocol = new ClientProtocol();
-            protocol.setCommand(ClientCommand.RequestConnect);
-            protocol.setDataJson(passcode);
-            sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
-
-            ((CServer)server).setState(ServerState.PasscodeSent);
+        if (server.getState() != ServerState.PasscodeRequested) {
+            return;
         }
+
+        ClientProtocol protocol = new ClientProtocol();
+        protocol.setCommand(ClientCommand.RequestConnect);
+        protocol.setDataJson(passcode);
+        sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
+
+        ((CServer) server).setState(ServerState.PasscodeSent);
     }
 
     @Override
@@ -102,39 +72,46 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
     @Override
     public void sendData(String dataJson, IServer server) {
-        sendClientPacket(ClientPacketType.Data, dataJson , server);
+        sendClientPacket(ClientPacketType.Data, dataJson, server);
     }
 
-    private void sendClientPacket(ClientPacketType type, String dataJson, IServer server)
-    {
-        ClientPacket clientPacket = new ClientPacket();
-        clientPacket.setId(UUID.randomUUID().toString());
-        clientPacket.setName(_name);
-        clientPacket.setType(type);
-        clientPacket.setDataJson(dataJson);
+    @Override
+    protected void handleProtocolPacket(IServerPacket protocolPacket) {
+        CServer server = getServerById(protocolPacket.getId());
 
-        sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());
+        if (server == null && server.getState() == ServerState.None) {
+            return;
+        }
+
+        ServerProtocol protocol = new ServerProtocol();
+        protocol.create(protocolPacket.getDataJson());
+
+        switch (protocol.getCommand()) {
+            case RequestPasscode:
+                handleRequestPasscodeCommand(server);
+                break;
+            case Accept:
+            case Refuse:
+                handleResultOfConnecting(server, protocol.getCommand());
+                break;
+        }
     }
 
-    private void handleRequestPasscodeCommand(final CServer server)
-    {
-        if (server.getState() != ServerState.Waiting)
-        {
+    private void handleRequestPasscodeCommand(final CServer server) {
+        if (server.getState() != ServerState.Waiting) {
             return;
         }
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                server.setState(ServerState.PasscodeRequested);
+            server.setState(ServerState.PasscodeRequested);
             }
         });
     }
 
-    private void handleResultOfConnecting(final CServer server, final ServerCommand command)
-    {
-        if (server.getState() != ServerState.PasscodeSent)
-        {
+    private void handleResultOfConnecting(final CServer server, final ServerCommand command) {
+        if (server.getState() != ServerState.PasscodeSent) {
             return;
         }
 
@@ -142,9 +119,19 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
             @Override
             public void run() {
                 server.setState(command == ServerCommand.Accept ?
-                ServerState.Connected : ServerState.None);
+                        ServerState.Connected : ServerState.None);
             }
         });
+    }
+
+    private void sendClientPacket(ClientPacketType type, String dataJson, IServer server) {
+        ClientPacket clientPacket = new ClientPacket();
+        clientPacket.setId(UUID.randomUUID().toString());
+        clientPacket.setName(_name);
+        clientPacket.setType(type);
+        clientPacket.setDataJson(dataJson);
+
+        sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());
     }
 }
 
