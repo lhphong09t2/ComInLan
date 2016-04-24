@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
  * Created by lep on 4/19/2016.
  */
 public abstract class NetworkUtility {
+    public final int[] UdpListenerPort = {55176, 23435, 34523, 45349};
     protected final int UdpPacketSizeInByte = 4096;
 
     private DatagramSocket _udpSocket;

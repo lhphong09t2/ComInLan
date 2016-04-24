@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.onballgroup.cominlan.client.ComInLanClient;
 import com.onballgroup.cominlan.client.OnBroadcastClientListener;
+import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.OnServerListener;
 import com.onballgroup.cominlan.model.ServerState;
@@ -18,8 +19,7 @@ import com.onballgroup.cominlan.model.ServerState;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnBroadcastClientListener,
-        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     private ListView _serverListView;
     private ServerAdapter _arrayAdapter;
 
@@ -69,15 +69,27 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     }
 
     public void sendPasscodeButtonClick(View v) {
-        IServer server = (IServer) _serverListView.getSelectedItem();
+        int checkedItemPosition = _serverListView.getCheckedItemPosition();
 
-        if (server != null) {
-            _comInLanClient.sendPasscode(server, _dataEditText.getText().toString());
+        if (checkedItemPosition < 0) {
+            return;
+        }
+
+        CServer checkedServer = (CServer)_serverListView.getItemAtPosition(checkedItemPosition);
+
+        if (checkedServer != null) {
+            _comInLanClient.sendPasscode(checkedServer, _dataEditText.getText().toString());
         }
     }
 
     public void sendPButtonClick(View v) {
-        _serverListView.getSelectedItem();
+        int checkedItemPosition = _serverListView.getCheckedItemPosition();
+
+        if (checkedItemPosition < 0) {
+            return;
+        }
+
+        CServer checkedServer = (CServer)_serverListView.getItemAtPosition(checkedItemPosition);
     }
 
     @Override
@@ -99,37 +111,59 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
         _serverListView.setItemChecked(position, true);
-
         IServer server = _arrayAdapter.getItem(position);
-        server.setOnServerListener(new OnServerListener() {
-            @Override
-            public void onStateChanged(IServer server) {
-                _arrayAdapter.notifyDataSetChanged();
 
-                if (_serverListView.getSelectedItem() == server) {
-                    if (server.getState() == ServerState.Connected) {
-                        _sendButton.setEnabled(true);
-                    } else {
-                        _sendButton.setEnabled(false);
+        if (server.getState() == ServerState.Connected) {
+            _sendButton.setEnabled(true);
+        } else {
+            _sendButton.setEnabled(false);
+        }
+
+        if (server.getState() == ServerState.PasscodeRequested) {
+            _sendPasscodeButon.setEnabled(true);
+        } else {
+            _sendPasscodeButon.setEnabled(false);
+        }
+
+        if (server.getState() == ServerState.None) {
+            server.setOnServerListener(new OnServerListener() {
+                @Override
+                public void onStateChanged(IServer server) {
+                    _arrayAdapter.notifyDataSetChanged();
+
+                    int checkedItemPosition = _serverListView.getCheckedItemPosition();
+
+                    if (checkedItemPosition < 0) {
+                        return;
                     }
 
-                    if (server.getState() == ServerState.PasscodeRequested) {
-                        _sendPasscodeButon.setEnabled(true);
-                    } else {
-                        _sendPasscodeButon.setEnabled(false);
+                    Object checkedServer = _serverListView.getItemAtPosition(checkedItemPosition);
+
+                    if (checkedServer == server) {
+                        if (server.getState() == ServerState.Connected) {
+                            _sendButton.setEnabled(true);
+                        } else {
+                            _sendButton.setEnabled(false);
+                        }
+
+                        if (server.getState() == ServerState.PasscodeRequested) {
+                            _sendPasscodeButon.setEnabled(true);
+                        } else {
+                            _sendPasscodeButon.setEnabled(false);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onDataReceived(IServer server) {
+                @Override
+                public void onDataReceived(IServer server) {
 
-            }
-        });
+                }
+            });
 
-        _comInLanClient.connect(server);
+            _comInLanClient.connect(server);
+        }
     }
 
     @Override
@@ -137,28 +171,5 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         IServer server = _arrayAdapter.getItem(position);
         _comInLanClient.disconnect(server);
         return true;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        IServer server = _arrayAdapter.getItem(position);
-
-        if (server.getState() == ServerState.Connected) {
-            _sendButton.setEnabled(true);
-        } else {
-            _sendPasscodeButon.setEnabled(false);
-        }
-
-        if (server.getState() == ServerState.PasscodeRequested) {
-            _sendButton.setEnabled(true);
-        } else {
-            _sendPasscodeButon.setEnabled(false);
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        _sendButton.setEnabled(false);
-        _sendPasscodeButon.setEnabled(false);
     }
 }

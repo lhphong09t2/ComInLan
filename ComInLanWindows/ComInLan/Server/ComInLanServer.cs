@@ -79,11 +79,18 @@ namespace ComInLan.Server
 				return;
 			}
 
+			var port = int.Parse(protocol.DataJson);
+
+			if (!UdpListenerPort.Contains(port))
+			{
+				return;
+			}
+
 			client = new CClient()
 			{
 				Id = protocolPacket.Id,
 				Name = protocolPacket.Name,
-				Port = int.Parse(protocol.DataJson),
+				Port = port,
 				Address = address,
 			};
 
@@ -130,7 +137,7 @@ namespace ComInLan.Server
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.WaitingPasscode) as CClient;
 
-			if (client == null && client.State != ClientState.WaitingPasscode)
+			if (client == null || client.State != ClientState.WaitingPasscode)
 			{
 				return;
 			}
@@ -152,7 +159,7 @@ namespace ComInLan.Server
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.Accepted) as CClient;
 
-			if (client == null && client.State != ClientState.Accepted)
+			if (client == null || client.State != ClientState.Accepted)
 			{
 				return;
 			}

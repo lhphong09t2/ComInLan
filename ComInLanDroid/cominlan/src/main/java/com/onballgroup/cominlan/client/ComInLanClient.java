@@ -13,8 +13,6 @@ import com.onballgroup.cominlan.model.protocol.ClientProtocol;
 import com.onballgroup.cominlan.model.protocol.ServerCommand;
 import com.onballgroup.cominlan.model.protocol.ServerProtocol;
 
-import java.util.UUID;
-
 /**
  * Created by Phong Le on 4/17/2016.
  */
@@ -58,7 +56,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         }
 
         ClientProtocol protocol = new ClientProtocol();
-        protocol.setCommand(ClientCommand.RequestConnect);
+        protocol.setCommand(ClientCommand.Passcode);
         protocol.setDataJson(passcode);
         sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
 
@@ -79,7 +77,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     protected void handleProtocolPacket(IServerPacket protocolPacket) {
         CServer server = getServerById(protocolPacket.getId());
 
-        if (server == null && server.getState() == ServerState.None) {
+        if (server == null || server.getState() == ServerState.None) {
             return;
         }
 
@@ -126,7 +124,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
     private void sendClientPacket(ClientPacketType type, String dataJson, IServer server) {
         ClientPacket clientPacket = new ClientPacket();
-        clientPacket.setId(UUID.randomUUID().toString());
+        clientPacket.setId(getId());
         clientPacket.setName(_name);
         clientPacket.setType(type);
         clientPacket.setDataJson(dataJson);

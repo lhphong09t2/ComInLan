@@ -19,7 +19,7 @@ namespace ComInLan.Server
 		public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
 		public const int AdvertisingPeriod = 5000;
 
-		public string Id { get { return _broadcastPacket.Id; } }
+		public string Id { get; private set; }
 
 		public string Name { get; set; }
 
@@ -41,6 +41,7 @@ namespace ComInLan.Server
 			Control = control;
 			Clients = new List<IClient>();
 
+			Id = Guid.NewGuid().ToString();
 			ListeningPort = FindAvaiablePortToListen();
 
 			var broadcastData = new BroadcastData()
@@ -51,7 +52,7 @@ namespace ComInLan.Server
 			_broadcastPacket = new ServerPacket()
 			{
 				DataJson = JsonConvert.SerializeObject(broadcastData),
-				Id = Guid.NewGuid().ToString(),
+				Id = Id,
 				DomainId = DomainId,
 				Type = ServerPacketType.Broadcast
 			};

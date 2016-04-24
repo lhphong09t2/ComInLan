@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:enterFadeDuration="@android:integer/config_longAnimTime">
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="#30ffaaaa" />
+        </shape>
+    </item>
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#70aaaaaa" />
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#eeffff" />
+        </shape>
+    </item>
+
+</selector>

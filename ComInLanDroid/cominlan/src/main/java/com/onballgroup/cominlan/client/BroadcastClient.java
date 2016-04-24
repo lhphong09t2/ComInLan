@@ -16,13 +16,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by Phong Le on 4/21/2016.
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
-    public final int[] UdpListenerPort = {55176, 23435, 34523, 45349};
     public final int ServerCleanupPeriod = 6000;
+
+    private String _id;
+
+    public String getId()
+    {
+        return  _id;
+    }
 
     private Activity _activity;
 
@@ -40,6 +47,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
     private Timer _serverCleanupTimer;
 
     public BroadcastClient(Activity activity) {
+        _id = UUID.randomUUID().toString();
         _activity = activity;
         _servers = new ArrayList<IServer>();
 

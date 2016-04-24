@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Phong Le on 4/21/2016.
  */
 public interface IBroadcastClient {
+    String getId();
     String getDomainId();
     int getListeningPort();
     List<IServer> getServers();
