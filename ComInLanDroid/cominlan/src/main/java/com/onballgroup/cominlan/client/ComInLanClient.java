@@ -2,6 +2,7 @@ package com.onballgroup.cominlan.client;
 
 import android.app.Activity;
 
+import com.onballgroup.cominlan.CConstant;
 import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.ServerState;
@@ -12,6 +13,9 @@ import com.onballgroup.cominlan.model.protocol.ClientMessage;
 import com.onballgroup.cominlan.model.protocol.ClientProtocol;
 import com.onballgroup.cominlan.model.protocol.ServerMessage;
 import com.onballgroup.cominlan.model.protocol.ServerProtocol;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Phong Le on 4/17/2016.
@@ -29,9 +33,36 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         return _name;
     }
 
+    private Timer _clientRefreshTimer;
+
     public ComInLanClient(Activity activity, String name) {
         super(activity);
         _name = name;
+    }
+
+    @Override
+    public boolean start() {
+        if (super.start()) {
+
+            _clientRefreshTimer = new Timer();
+            _clientRefreshTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    refreshClients();
+                }
+            }, CConstant.ServerCleanupPeriod, CConstant.ServerCleanupPeriod);
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        _clientRefreshTimer.cancel();
+        _clientRefreshTimer.purge();
     }
 
     @Override
@@ -110,7 +141,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-            server.setState(ServerState.PasscodeRequested);
+                server.setState(ServerState.PasscodeRequested);
             }
         });
     }
@@ -127,6 +158,17 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
                         ServerState.Connected : ServerState.None);
             }
         });
+    }
+
+    private void refreshClients() {
+        synchronized (getServers()) {
+            for (IServer server : getServers()) {
+                if (server.getState() != ServerState.None)
+                {
+                    sendClientPacket(ClientPacketType.Refresh, null, server);
+                }
+            }
+        }
     }
 
     private void sendClientPacket(ClientPacketType type, String dataJson, IServer server) {

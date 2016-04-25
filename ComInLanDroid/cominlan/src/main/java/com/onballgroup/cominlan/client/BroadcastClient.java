@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.onballgroup.cominlan.CConstant;
 import com.onballgroup.cominlan.NetworkUtility;
+import com.onballgroup.cominlan.model.Base.BaseModel;
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IBroadcastData;
@@ -25,9 +26,8 @@ import java.util.UUID;
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
     private String _id;
 
-    public String getId()
-    {
-        return  _id;
+    public String getId() {
+        return _id;
     }
 
     private Activity _activity;
@@ -66,7 +66,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         return _listeningPort;
     }
 
-    public void start() {
+    public boolean start() {
         int index = 0;
         while (!startUdp(CConstant.UdpListenerPort[index])) {
             index++;
@@ -83,40 +83,16 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             _serverCleanupTimer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    long currentTime = System.currentTimeMillis() / 1000;
-                    Iterator<IServer> it = _servers.iterator();
-
-                    boolean hasChange = false;
-
-                    synchronized (_servers) {
-                        while (it.hasNext()) {
-                            final IServer server = it.next();
-                            if (currentTime - server.getRefreshTime() > CConstant.ServerCleanupPeriod / 1000) {
-                                it.remove();
-
-                                _activity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        _onBroadcastClientListener.onServerRemoved(server);
-                                    }
-                                });
-
-                                hasChange = true;
-                            }
-                        }
-                    }
-
-                    if (hasChange) {
-                        _activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                _onBroadcastClientListener.onServersChanged(_servers);
-                            }
-                        });
-                    }
+                    cleanUpServers();
                 }
             }, CConstant.ServerCleanupPeriod, CConstant.ServerCleanupPeriod);
         }
+        else
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void stop() {
@@ -151,7 +127,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     handleProtocolPacket(serverPacket);
                     break;
                 case Data:
-                    handleDatapacket(serverPacket);
+                    handleDataPacket(serverPacket);
                     break;
             }
         }
@@ -203,28 +179,58 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
-    private void handleDatapacket(IServerPacket dataPacket)
-    {
+    private void handleDataPacket(IServerPacket dataPacket) {
         CServer server = getServerById(dataPacket.getId());
 
-        if (server != null)
-        {
+        if (server != null) {
             server.callIDataReceived(dataPacket.getDataJson());
         }
     }
 
-    protected CServer getServerById(String id)
-    {
+    private void cleanUpServers() {
+        long currentUnixTimestamp = BaseModel.getCurrentUnixTimestamp();
+
+        boolean hasChange = false;
+        Iterator<IServer> it = _servers.iterator();
+
+        synchronized (_servers) {
+            while (it.hasNext()) {
+                final IServer server = it.next();
+                if (currentUnixTimestamp - server.getRefreshTime() > CConstant.ServerCleanupPeriod / 1000) {
+                    it.remove();
+
+                    _activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            _onBroadcastClientListener.onServerRemoved(server);
+                        }
+                    });
+
+                    hasChange = true;
+                }
+            }
+        }
+
+        if (hasChange) {
+            _activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _onBroadcastClientListener.onServersChanged(_servers);
+                }
+            });
+        }
+    }
+
+    protected CServer getServerById(String id) {
         CServer server = null;
         for (IServer item : getServers()) {
-            if (item.getId().equals(id))
-            {
-                server = (CServer)item;
+            if (item.getId().equals(id)) {
+                server = (CServer) item;
                 break;
             }
         }
 
-        return  server;
+        return server;
     }
 
     protected abstract void handleProtocolPacket(IServerPacket protocolPacket);

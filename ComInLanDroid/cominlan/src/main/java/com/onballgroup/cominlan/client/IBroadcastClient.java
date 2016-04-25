@@ -12,7 +12,7 @@ public interface IBroadcastClient {
     String getDomainId();
     int getListeningPort();
     List<IServer> getServers();
-    void start();
+    boolean start();
     void stop();
     void setOnComInClientListener(OnBroadcastClientListener listener);
 }

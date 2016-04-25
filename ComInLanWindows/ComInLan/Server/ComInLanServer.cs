@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using ComInLan.Model.Protocol;
 using System.Windows.Forms;
 using System.Net;
+using Timer = System.Timers.Timer;
+using ComInLan.Model.Base;
 
 namespace ComInLan.Server
 {
@@ -25,7 +27,41 @@ namespace ComInLan.Server
 			}
 		}
 
-		public ComInLanServer(Control control) : base(control) { }
+		private Timer _clientCleanupTimer;
+
+		public ComInLanServer(Control control) : base(control)
+		{
+			_clientCleanupTimer = new Timer(CConstant.ClientCleanupPeriod)
+			{
+				AutoReset = true,
+			};
+
+			_clientCleanupTimer.Elapsed += delegate
+			{
+				CleanupClients();
+			};
+		}
+
+		public override bool Start()
+		{
+			if (base.Start())
+			{
+				_clientCleanupTimer.Start();
+			}
+			else
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public override void Stop()
+		{
+			base.Stop();
+
+			_clientCleanupTimer.Stop();
+		}
 
 		protected override void HandleProtocolPacket(ClientPacket protocolPacket, IPAddress address)
 		{
@@ -164,6 +200,39 @@ namespace ComInLan.Server
 			}
 
 			RemoveClient(client);
+		}
+
+		private void CleanupClients()
+		{
+			var currentUnixTimestamp = BaseModel.GetCurrentUnixTimestamp();
+
+			var hasChange = false;
+
+			lock(Clients)
+			{
+				foreach (var client in Clients.ToList())
+				{
+					if (currentUnixTimestamp - client.RefreshTime > CConstant.ClientCleanupPeriod / 1000)
+					{
+						Clients.Remove(client);
+
+						Control.Invoke((MethodInvoker)delegate
+						{
+							ClientRemoved?.Invoke(client);
+						});
+
+						hasChange = true;
+					}
+				}
+			}
+
+			if (hasChange)
+			{
+				Control.Invoke((MethodInvoker)delegate
+				{
+					ClientsChanged?.Invoke(Clients);
+				});
+			}
 		}
 
 		private void RemoveClient(CClient client)
