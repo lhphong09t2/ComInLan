@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CConstant.cs" />
     <Compile Include="Client\BroadcastClient.cs" />
     <Compile Include="Client\IBroadcastClient.cs" />
     <Compile Include="Model\Base\IJson.cs" />

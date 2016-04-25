@@ -17,7 +17,6 @@ import com.onballgroup.cominlan.model.protocol.ServerProtocol;
  * Created by Phong Le on 4/17/2016.
  */
 public class ComInLanClient extends BroadcastClient implements IComInLanClient {
-
     @Override
     public String getDomainId() {
         return "ComInLan";

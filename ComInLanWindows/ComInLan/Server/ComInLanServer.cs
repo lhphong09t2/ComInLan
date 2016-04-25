@@ -21,7 +21,7 @@ namespace ComInLan.Server
 		{
 			get
 			{
-				return "ComInLan";
+				return CConstant.DomainId;
 			}
 		}
 
@@ -62,10 +62,7 @@ namespace ComInLan.Server
 
 				Control.Invoke((MethodInvoker)delegate
 				{
-					if (ClientChanged != null)
-					{
-						ClientChanged(client);
-					}
+					ClientChanged?.Invoke(client);
 				});
 			}
 		}
@@ -81,7 +78,7 @@ namespace ComInLan.Server
 
 			var port = int.Parse(protocol.DataJson);
 
-			if (!UdpListenerPort.Contains(port))
+			if (!CConstant.UdpListenerPort.Contains(port))
 			{
 				return;
 			}
@@ -104,15 +101,9 @@ namespace ComInLan.Server
 
 			Control.Invoke((MethodInvoker)delegate
 			{
-				if (ClientNew != null)
-				{
-					ClientNew(client);
-				}
+				ClientNew?.Invoke(client);
 
-				if (ClientsChanged != null)
-				{
-					ClientsChanged(Clients);
-				}
+				ClientsChanged?.Invoke(Clients);
 
 				var generator = new Random();
 				var r = generator.Next(1, 1000000);
@@ -189,15 +180,9 @@ namespace ComInLan.Server
 
 			Control.Invoke((MethodInvoker)delegate
 			{
-				if (ClientRemoved != null)
-				{
-					ClientRemoved(client);
-				}
+				ClientRemoved?.Invoke(client);
 
-				if (ClientsChanged != null)
-				{
-					ClientsChanged(Clients);
-				}
+				ClientsChanged?.Invoke(Clients);
 			});
 		}
 

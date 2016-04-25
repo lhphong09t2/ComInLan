@@ -16,9 +16,6 @@ namespace ComInLan.Server
 {
 	public abstract class BroadcastServer : NetworkUtility, IBroadcastServer
 	{
-		public readonly int[] ClientUdpPort = new int[] { 55176, 23435, 34523, 45349 };
-		public const int AdvertisingPeriod = 5000;
-
 		public string Id { get; private set; }
 
 		public string Name { get; set; }
@@ -57,7 +54,7 @@ namespace ComInLan.Server
 				Type = ServerPacketType.Broadcast
 			};
 
-			_advertisingTimer = new Timer(AdvertisingPeriod)
+			_advertisingTimer = new Timer(CConstant.AdvertisingPeriod)
 			{
 				AutoReset = true,
 			};
@@ -132,7 +129,7 @@ namespace ComInLan.Server
 					{
 						var address = GetBroadcastAddress(ua);
 
-						foreach (var port in ClientUdpPort)
+						foreach (var port in CConstant.UdpListenerPort)
 						{
 							SendUdp(packetJson, address, port);
 						}

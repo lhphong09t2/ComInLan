@@ -34,10 +34,7 @@ namespace ComInLan.Model
 			{
 				_state = value;
 
-				if (StateChanged != null)
-				{
-					StateChanged(this);
-				}
+				StateChanged?.Invoke(this);
 			}
 		}
 
@@ -63,10 +60,7 @@ namespace ComInLan.Model
 
 		public void CallIDataReceived(String data)
 		{
-			if (DataReceived != null)
-			{
-				DataReceived(this, data);
-			}
+			DataReceived?.Invoke(this, data);
 		}
 	}
 }

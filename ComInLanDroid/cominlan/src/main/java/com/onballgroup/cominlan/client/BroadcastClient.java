@@ -2,6 +2,7 @@ package com.onballgroup.cominlan.client;
 
 import android.app.Activity;
 
+import com.onballgroup.cominlan.CConstant;
 import com.onballgroup.cominlan.NetworkUtility;
 import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.CServer;
@@ -22,8 +23,6 @@ import java.util.UUID;
  * Created by Phong Le on 4/21/2016.
  */
 public abstract class BroadcastClient extends NetworkUtility implements IBroadcastClient {
-    public final int ServerCleanupPeriod = 6000;
-
     private String _id;
 
     public String getId()
@@ -69,15 +68,15 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     public void start() {
         int index = 0;
-        while (!startUdp(UdpListenerPort[index])) {
+        while (!startUdp(CConstant.UdpListenerPort[index])) {
             index++;
-            if (index >= UdpListenerPort.length) {
+            if (index >= CConstant.UdpListenerPort.length) {
                 break;
             }
         }
 
-        if (index < UdpListenerPort.length) {
-            _listeningPort = UdpListenerPort[index];
+        if (index < CConstant.UdpListenerPort.length) {
+            _listeningPort = CConstant.UdpListenerPort[index];
             _isRunning = true;
 
             _serverCleanupTimer = new Timer();
@@ -92,7 +91,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     synchronized (_servers) {
                         while (it.hasNext()) {
                             final IServer server = it.next();
-                            if (currentTime - server.getRefreshTime() > ServerCleanupPeriod / 1000) {
+                            if (currentTime - server.getRefreshTime() > CConstant.ServerCleanupPeriod / 1000) {
                                 it.remove();
 
                                 _activity.runOnUiThread(new Runnable() {
@@ -116,7 +115,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                         });
                     }
                 }
-            }, ServerCleanupPeriod, ServerCleanupPeriod);
+            }, CConstant.ServerCleanupPeriod, CConstant.ServerCleanupPeriod);
         }
     }
 

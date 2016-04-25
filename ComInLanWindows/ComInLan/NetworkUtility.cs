@@ -12,9 +12,6 @@ namespace ComInLan
 {
 	public abstract class NetworkUtility
 	{
-		public static readonly int[] UdpListenerPort = { 55176, 23435, 34523, 45349 };
-		protected const int UdpPacketSizeInByte = 4096;
-
 		private Socket _udpSocket;
 		private UdpClient _udpClient;
 

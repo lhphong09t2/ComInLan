@@ -11,7 +11,7 @@ namespace ComInLan.Model
 	public class CClient : BaseModel, IClient
 	{
 		//--------------Created from packet------------------//
-		public string Id { get; set;  }
+		public string Id { get; set; }
 
 		public string Name { get; set; }
 
@@ -36,10 +36,7 @@ namespace ComInLan.Model
 			{
 				_passcode = value;
 
-				if (PasscodeCreated != null)
-				{
-					PasscodeCreated(this);
-				}
+				PasscodeCreated?.Invoke(this);
 			}
 		}
 
@@ -51,10 +48,7 @@ namespace ComInLan.Model
 			{
 				_state = value;
 
-				if (StateChanged != null)
-				{
-					StateChanged(this);
-				}
+				StateChanged?.Invoke(this);
 			}
 		}
 
@@ -80,10 +74,7 @@ namespace ComInLan.Model
 
 		public void CallDataReceived(String data)
 		{
-			if (DataReceived != null)
-			{
-				DataReceived(this, data);
-			}
+			DataReceived?.Invoke(this, data);
 		}
 	}
 }
