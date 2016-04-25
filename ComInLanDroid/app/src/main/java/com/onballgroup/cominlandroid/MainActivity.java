@@ -105,29 +105,13 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
 
     @Override
     public void onServerRemoved(IServer server) {
-        int checkedItemPosition = _serverListView.getCheckedItemPosition();
-
-        if (checkedItemPosition < 0) {
+        if (_comInLanClient.getServers().contains(server))
+        {
             return;
         }
 
-        Object checkedServer = _serverListView.getItemAtPosition(checkedItemPosition);
-
-        if (checkedServer == server) {
-            if (server.getState() == ServerState.Connected) {
-                _sendButton.setEnabled(true);
-            } else {
-                _sendButton.setEnabled(false);
-            }
-
-            if (server.getState() == ServerState.PasscodeRequested) {
-                _sendPasscodeButon.setEnabled(true);
-            } else {
-                _sendPasscodeButon.setEnabled(false);
-            }
-        }
-
-        _arrayAdapter.notifyDataSetChanged();
+        _sendButton.setEnabled(false);
+        _sendPasscodeButon.setEnabled(false);
     }
 
     @Override
