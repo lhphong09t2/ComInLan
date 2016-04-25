@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
                 }
 
                 @Override
-                public void onDataReceived(IServer server, String dataJson) {
+                public void onDataReceived(IServer server, String data) {
 
                 }
             });

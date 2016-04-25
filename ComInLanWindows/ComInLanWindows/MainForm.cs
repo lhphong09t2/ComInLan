@@ -53,11 +53,11 @@ namespace ComInLanWindows
 			client.StateChanged += Client_StateChanged;
 		}
 
-		void client_DataReceived(ComInLan.Model.IClient client, string dataJson)
+		void client_DataReceived(ComInLan.Model.IClient client, string data)
 		{
-			WriteLine("From " + client.Name + ": " + dataJson);
+			WriteLine("From " + client.Name + ": " + data);
 
-			switch (dataJson)
+			switch (data)
 			{
 				case "b":
 					_inputsimulator.Keyboard.KeyPress(VirtualKeyCode.BACK);

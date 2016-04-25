@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ComInLan.Model
 {
 	public delegate void ServerStateEventHandler(IServer server);
-	public delegate void SeverDataEventHandler(IServer server, string dataJson);
+	public delegate void SeverDataEventHandler(IServer server, string data);
 
 	public interface IServer
 	{

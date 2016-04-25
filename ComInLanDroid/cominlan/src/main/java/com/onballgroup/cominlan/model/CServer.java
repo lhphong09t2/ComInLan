@@ -101,11 +101,11 @@ public class CServer extends BaseModel implements IServer {
         _onServerListener = listener;
     }
 
-    public void callIDataReceived(String dataJson)
+    public void callIDataReceived(String data)
     {
         if (_onServerListener != null)
         {
-            _onServerListener.onDataReceived(this, dataJson);
+            _onServerListener.onDataReceived(this, data);
         }
     }
 }

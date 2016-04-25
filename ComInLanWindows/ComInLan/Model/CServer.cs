@@ -61,11 +61,11 @@ namespace ComInLan.Model
 		public event ServerStateEventHandler StateChanged;
 		public event SeverDataEventHandler DataReceived;
 
-		public void CallIDataReceived(String dataJson)
+		public void CallIDataReceived(String data)
 		{
 			if (DataReceived != null)
 			{
-				DataReceived(this, dataJson);
+				DataReceived(this, data);
 			}
 		}
 	}

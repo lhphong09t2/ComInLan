@@ -6,5 +6,5 @@ package com.onballgroup.cominlan.model;
 public interface OnClientListener {
     void onPasscodeCreated(IClient client);
     void onStateChanged(IClient client);
-    void onDataReceived(IClient client, String dataJson);
+    void onDataReceived(IClient client, String data);
 }

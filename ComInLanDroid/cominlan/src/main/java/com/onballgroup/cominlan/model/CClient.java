@@ -116,11 +116,11 @@ public class CClient extends BaseModel implements IClient {
         _onClientListener = listener;
     }
 
-    public void callDataReceived(String dataJson)
+    public void callDataReceived(String data)
     {
         if (_onClientListener != null)
         {
-            _onClientListener.onDataReceived(this, dataJson);
+            _onClientListener.onDataReceived(this, data);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ComInLan.Model
 {
 	public delegate void ClientPasscodeEventHandler(IClient client);
 	public delegate void ClientStateEventHandler(IClient client);
-	public delegate void ClientDataEventHandler(IClient client, string dataJson);
+	public delegate void ClientDataEventHandler(IClient client, string data);
 
 	public interface IClient
 	{
