@@ -1,12 +1,16 @@
 ﻿using ComInLan.Server;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace ComInLanWindows
 {
 	public partial class MainForm : Form
 	{
 		private IComInLanServer _server;
+		private InputSimulator _inputsimulator;
 
 		public MainForm()
 		{
@@ -21,6 +25,8 @@ namespace ComInLanWindows
 			listenAtPort.Text = "Listen at " + _server.ListeningPort;
 			inputText.Text = Environment.MachineName;
 			idText.Text = _server.Id.ToString();
+
+			_inputsimulator = new InputSimulator();
 		}
 
 		private void _server_ClientsChanged(System.Collections.Generic.List<ComInLan.Model.IClient> clients)
@@ -45,17 +51,40 @@ namespace ComInLanWindows
 
 			client.PasscodeCreated += Client_PasscodeCreated;
 			client.StateChanged += Client_StateChanged;
-			client.DataReceived += client_DataReceived;
 		}
 
 		void client_DataReceived(ComInLan.Model.IClient client, string dataJson)
 		{
 			WriteLine("From " + client.Name + ": " + dataJson);
+
+			switch (dataJson)
+			{
+				case "b":
+					_inputsimulator.Keyboard.KeyPress(VirtualKeyCode.BACK);
+					break;
+				case "n":
+					_inputsimulator.Keyboard.KeyPress(VirtualKeyCode.NEXT);
+					break;
+				case "f": 
+					_inputsimulator.Keyboard.KeyPress(VirtualKeyCode.F5);
+					break;
+			}
 		}
 
 		private void Client_StateChanged(ComInLan.Model.IClient client)
 		{
 			WriteLine("State changed: " + client.State.ToString());
+
+			if (client.State == ComInLan.Model.ClientState.Accepted)
+			{
+				client.DataReceived += client_DataReceived;
+			}
+
+			if (client.State == ComInLan.Model.ClientState.None)
+			{
+
+				client.DataReceived -= client_DataReceived;
+			}
 		}
 
 		private void Client_PasscodeCreated(ComInLan.Model.IClient client)
