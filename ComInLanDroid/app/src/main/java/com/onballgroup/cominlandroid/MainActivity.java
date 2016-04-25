@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
 
         CServer checkedServer = (CServer)_serverListView.getItemAtPosition(checkedItemPosition);
 
-        _comInLanClient.sendData("Abc", checkedServer);
+        _comInLanClient.sendData(checkedServer,_dataEditText.getText().toString());
     }
 
     @Override

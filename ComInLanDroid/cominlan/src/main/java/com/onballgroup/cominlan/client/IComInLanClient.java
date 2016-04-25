@@ -10,5 +10,5 @@ public interface IComInLanClient extends IBroadcastClient {
     void connect(IServer server);
     void sendPasscode(IServer server, String passcode);
     void disconnect(IServer server);
-    void sendData(String dataJson, IServer server);
+    void sendData(IServer server, String dataJson);
 }

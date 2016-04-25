@@ -77,7 +77,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
     }
 
     @Override
-    public void sendData(String dataJson, IServer server) {
+    public void sendData(IServer server, String dataJson) {
         sendClientPacket(ClientPacketType.Data, dataJson, server);
     }
 
