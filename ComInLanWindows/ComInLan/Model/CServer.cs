@@ -65,7 +65,7 @@ namespace ComInLan.Model
 		{
 			if (DataReceived != null)
 			{
-				DataReceived(this);
+				DataReceived(this, dataJson);
 			}
 		}
 	}

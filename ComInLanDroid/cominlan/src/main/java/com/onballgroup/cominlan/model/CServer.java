@@ -105,7 +105,7 @@ public class CServer extends BaseModel implements IServer {
     {
         if (_onServerListener != null)
         {
-            _onServerListener.onDataReceived(this);
+            _onServerListener.onDataReceived(this, dataJson);
         }
     }
 }

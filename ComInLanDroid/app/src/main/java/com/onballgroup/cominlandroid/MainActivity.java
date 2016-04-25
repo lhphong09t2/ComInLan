@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         }
     }
 
-    public void sendPButtonClick(View v) {
+    public void sendButtonClick(View v) {
         int checkedItemPosition = _serverListView.getCheckedItemPosition();
 
         if (checkedItemPosition < 0) {
@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
         }
 
         CServer checkedServer = (CServer)_serverListView.getItemAtPosition(checkedItemPosition);
+
+        _comInLanClient.sendData("Abc", checkedServer);
     }
 
     @Override
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnBroadcastClient
                 }
 
                 @Override
-                public void onDataReceived(IServer server) {
+                public void onDataReceived(IServer server, String dataJson) {
 
                 }
             });

@@ -65,7 +65,15 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
 
     @Override
     public void disconnect(IServer server) {
+        if (server.getState() == ServerState.None) {
+            return;
+        }
 
+        ClientProtocol protocol = new ClientProtocol();
+        protocol.setMessage(ClientMessage.Disconnect);
+        sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
+
+        ((CServer) server).setState(ServerState.None);
     }
 
     @Override

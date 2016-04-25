@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:enabled="false"
         android:onClick="sendPasscodeButtonClick"
-        android:text="Send Passcode" />
+        android:text="Passcode" />
 
     <Button
         android:id="@+id/sendButton"

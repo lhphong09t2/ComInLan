@@ -45,6 +45,12 @@ namespace ComInLanWindows
 
 			client.PasscodeCreated += Client_PasscodeCreated;
 			client.StateChanged += Client_StateChanged;
+			client.DataReceived += client_DataReceived;
+		}
+
+		void client_DataReceived(ComInLan.Model.IClient client, string dataJson)
+		{
+			WriteLine("From " + client.Name + ": " + dataJson);
 		}
 
 		private void Client_StateChanged(ComInLan.Model.IClient client)
