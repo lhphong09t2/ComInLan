@@ -9,6 +9,6 @@ namespace ComInLan.Model.Protocol
 {
 	public interface IClientProtocol : IJson
 	{
-		ClientCommand Command { get; }
+		ClientMessage Message { get; }
 	}
 }

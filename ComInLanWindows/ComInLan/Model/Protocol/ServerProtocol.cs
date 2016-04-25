@@ -9,6 +9,6 @@ namespace ComInLan.Model.Protocol
 {
 	public class ServerProtocol : Json, IServerProtocol
 	{
-		public ServerCommand Command { get; set; }
+		public ServerMessage Message { get; set; }
 	}
 }

@@ -9,15 +9,15 @@ import org.json.JSONObject;
  * Created by Phong Le on 4/20/2016.
  */
 public class ClientProtocol  extends Json implements IClientProtocol {
-    ClientCommand _command;
+    ClientMessage _message;
 
     @Override
-    public ClientCommand getCommand() {
-        return _command;
+    public ClientMessage getMessage() {
+        return _message;
     }
 
-    public void setCommand(ClientCommand command) {
-        _command = command;
+    public void setMessage(ClientMessage message) {
+        _message = message;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ClientProtocol  extends Json implements IClientProtocol {
         try {
             JSONObject jsonObject = new JSONObject(json);
 
-            _command = ClientCommand.values()[jsonObject.getInt("Command")];
+            _message = ClientMessage.values()[jsonObject.getInt("Message")];
             setDataJson(jsonObject.getString("DataJson"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ public class ClientProtocol  extends Json implements IClientProtocol {
     {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("Command", _command);
+            jsonObject.put("Message", _message);
             jsonObject.put("DataJson", getDataJson());
         } catch (JSONException e) {
             e.printStackTrace();

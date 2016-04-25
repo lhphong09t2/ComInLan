@@ -8,9 +8,9 @@ import com.onballgroup.cominlan.model.ServerState;
 import com.onballgroup.cominlan.model.packet.ClientPacket;
 import com.onballgroup.cominlan.model.packet.ClientPacketType;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
-import com.onballgroup.cominlan.model.protocol.ClientCommand;
+import com.onballgroup.cominlan.model.protocol.ClientMessage;
 import com.onballgroup.cominlan.model.protocol.ClientProtocol;
-import com.onballgroup.cominlan.model.protocol.ServerCommand;
+import com.onballgroup.cominlan.model.protocol.ServerMessage;
 import com.onballgroup.cominlan.model.protocol.ServerProtocol;
 
 /**
@@ -42,7 +42,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         }
 
         ClientProtocol protocol = new ClientProtocol();
-        protocol.setCommand(ClientCommand.RequestConnect);
+        protocol.setMessage(ClientMessage.RequestConnect);
         protocol.setDataJson(String.valueOf(getListeningPort()));
         sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
 
@@ -56,7 +56,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         }
 
         ClientProtocol protocol = new ClientProtocol();
-        protocol.setCommand(ClientCommand.Passcode);
+        protocol.setMessage(ClientMessage.Passcode);
         protocol.setDataJson(passcode);
         sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
 
@@ -84,18 +84,18 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         ServerProtocol protocol = new ServerProtocol();
         protocol.create(protocolPacket.getDataJson());
 
-        switch (protocol.getCommand()) {
+        switch (protocol.getMessage()) {
             case RequestPasscode:
-                handleRequestPasscodeCommand(server);
+                handleRequestPasscodeMessage(server);
                 break;
             case Accept:
             case Refuse:
-                handleResultOfConnecting(server, protocol.getCommand());
+                handleResultOfConnecting(server, protocol.getMessage());
                 break;
         }
     }
 
-    private void handleRequestPasscodeCommand(final CServer server) {
+    private void handleRequestPasscodeMessage(final CServer server) {
         if (server.getState() != ServerState.Waiting) {
             return;
         }
@@ -108,7 +108,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         });
     }
 
-    private void handleResultOfConnecting(final CServer server, final ServerCommand command) {
+    private void handleResultOfConnecting(final CServer server, final ServerMessage message) {
         if (server.getState() != ServerState.PasscodeSent) {
             return;
         }
@@ -116,7 +116,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                server.setState(command == ServerCommand.Accept ?
+                server.setState(message == ServerMessage.Accept ?
                         ServerState.Connected : ServerState.None);
             }
         });

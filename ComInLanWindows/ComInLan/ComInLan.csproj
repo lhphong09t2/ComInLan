@@ -61,7 +61,7 @@
     <Compile Include="Client\ComInLanClient.cs" />
     <Compile Include="Server\ComInLanServer.cs" />
     <Compile Include="Model\Packet\ClientPacketType.cs" />
-    <Compile Include="Model\Protocol\ClientCommand.cs" />
+    <Compile Include="Model\Protocol\ClientMessage.cs" />
     <Compile Include="Model\Protocol\ClientProtocol.cs" />
     <Compile Include="Model\IBroadcastData.cs" />
     <Compile Include="Model\Packet\IClientPacket.cs" />
@@ -72,7 +72,7 @@
     <Compile Include="Model\IServer.cs" />
     <Compile Include="Model\Packet\IServerPacket.cs" />
     <Compile Include="Model\Protocol\IServerProtocol.cs" />
-    <Compile Include="Model\Protocol\ServerCommand.cs" />
+    <Compile Include="Model\Protocol\ServerMessage.cs" />
     <Compile Include="Model\Protocol\ServerProtocol.cs" />
     <Compile Include="Model\CServer.cs" />
     <Compile Include="NetworkUtility.cs" />

@@ -140,8 +140,6 @@ namespace ComInLan.Server
 				}
 		}
 
-
-
 		private void HandleDataPacket(ClientPacket dataPacket)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == dataPacket.Id && x.State == ClientState.Accepted) as CClient;

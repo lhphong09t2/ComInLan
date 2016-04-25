@@ -9,15 +9,15 @@ import org.json.JSONObject;
  * Created by Phong Le on 4/20/2016.
  */
 public class ServerProtocol  extends Json implements IServerProtocol {
-    ServerCommand _command;
+    ServerMessage _message;
 
     @Override
-    public ServerCommand getCommand() {
-        return _command;
+    public ServerMessage getMessage() {
+        return _message;
     }
 
-    public void setCommand(ServerCommand command) {
-        _command = command;
+    public void setMessage(ServerMessage message) {
+        _message = message;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ServerProtocol  extends Json implements IServerProtocol {
         try {
             JSONObject jsonObject = new JSONObject(json);
 
-            _command = ServerCommand.values()[jsonObject.getInt("Command")];
+            _message = ServerMessage.values()[jsonObject.getInt("Message")];
             setDataJson(jsonObject.getString("DataJson"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class ServerProtocol  extends Json implements IServerProtocol {
     public String createJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("Command", _command);
+            jsonObject.put("Message", _message);
             jsonObject.put("DataJson", getDataJson());
         } catch (JSONException e) {
             e.printStackTrace();

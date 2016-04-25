@@ -31,16 +31,16 @@ namespace ComInLan.Server
 		{
 			var protocol = JsonConvert.DeserializeObject<ClientProtocol>(protocolPacket.DataJson);
 
-			switch (protocol.Command)
+			switch (protocol.Message)
 			{
-				case ClientCommand.RequestConnect:
-					HandleRequestConnectCommand(protocolPacket, protocol, address);
+				case ClientMessage.RequestConnect:
+					HandleRequestConnectMessage(protocolPacket, protocol, address);
 					break;
-				case ClientCommand.Passcode:
+				case ClientMessage.Passcode:
 					HandlePasscodeComand(protocolPacket.Id, protocol.DataJson);
 					break;
-				case ClientCommand.Disconnect:
-					HandleDisconnectCommand(protocolPacket.Id);
+				case ClientMessage.Disconnect:
+					HandleDisconnectMessage(protocolPacket.Id);
 					break;
 			}
 		}
@@ -70,7 +70,7 @@ namespace ComInLan.Server
 			}
 		}
 
-		private void HandleRequestConnectCommand(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
+		private void HandleRequestConnectMessage(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == protocolPacket.Id) as CClient;
 
@@ -122,7 +122,7 @@ namespace ComInLan.Server
 
 			var responseProtocol = new ServerProtocol()
 			{
-				Command = ServerCommand.RequestPasscode
+				Message = ServerMessage.RequestPasscode
 			};
 
 			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), client);
@@ -142,27 +142,45 @@ namespace ComInLan.Server
 				return;
 			}
 
-			Control.Invoke((MethodInvoker)delegate
-			{
-				client.State = passcode == client.Passcode ? ClientState.Accepted : ClientState.Refused;
-			});
+			var responseProtocol = new ServerProtocol();
 
-			var responseProtocol = new ServerProtocol()
+			if (passcode == client.Passcode)
 			{
-				Command = passcode == client.Passcode ? ServerCommand.Accept : ServerCommand.Refuse
-			};
+				Control.Invoke((MethodInvoker)delegate
+				{
+					client.State = ClientState.Accepted;
+				});
+
+				responseProtocol.Message = ServerMessage.Accept;
+			}
+			else
+			{
+				RemoveClient(client);
+
+				responseProtocol.Message = ServerMessage.Refuse;
+			}
 
 			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), client);
 		}
 
-		private void HandleDisconnectCommand(String id)
+		private void HandleDisconnectMessage(String id)
 		{
-			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.Accepted) as CClient;
+			var client = Clients.FirstOrDefault(x => x.Id == id) as CClient;
 
-			if (client == null || client.State != ClientState.Accepted)
+			if (client == null || !(client.State == ClientState.Accepted || client.State == ClientState.WaitingPasscode))
 			{
 				return;
 			}
+
+			RemoveClient(client);
+		}
+
+		private void RemoveClient(CClient client)
+		{
+			Control.Invoke((MethodInvoker)delegate
+			{
+				client.State = ClientState.Refused;
+			});
 
 			lock (Clients)
 			{
@@ -171,7 +189,7 @@ namespace ComInLan.Server
 
 			Control.Invoke((MethodInvoker)delegate
 			{
-				if (ClientChanged != null)
+				if (ClientRemoved != null)
 				{
 					ClientRemoved(client);
 				}

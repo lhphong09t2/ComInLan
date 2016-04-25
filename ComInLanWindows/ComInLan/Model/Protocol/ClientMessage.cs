@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComInLan.Model.Protocol
 {
-	public enum ClientCommand
+	public enum ClientMessage
 	{
 		RequestConnect,
 		Passcode,
