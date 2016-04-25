@@ -37,7 +37,7 @@ namespace ComInLan.Server
 					HandleRequestConnectMessage(protocolPacket, protocol, address);
 					break;
 				case ClientMessage.Passcode:
-					HandlePasscodeComand(protocolPacket.Id, protocol.DataJson);
+					HandlePasscodeMessage(protocolPacket.Id, protocol.DataJson);
 					break;
 				case ClientMessage.Disconnect:
 					HandleDisconnectMessage(protocolPacket.Id);
@@ -124,7 +124,7 @@ namespace ComInLan.Server
 			});
 		}
 
-		private void HandlePasscodeComand(String id, String passcode)
+		private void HandlePasscodeMessage(String id, String passcode)
 		{
 			var client = Clients.FirstOrDefault(x => x.Id == id && x.State == ClientState.WaitingPasscode) as CClient;
 
