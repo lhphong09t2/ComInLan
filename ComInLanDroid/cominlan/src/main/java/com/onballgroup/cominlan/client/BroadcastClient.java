@@ -86,9 +86,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     cleanUpServers();
                 }
             }, CConstant.ServerCleanupPeriod, CConstant.ServerCleanupPeriod);
-        }
-        else
-        {
+        } else {
             return false;
         }
 
@@ -104,7 +102,11 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
         synchronized (_servers) {
             _servers.clear();
-            _onBroadcastClientListener.onServersChanged(_servers);
+
+            if (_onBroadcastClientListener != null)
+            {
+                _onBroadcastClientListener.onServersChanged(_servers);
+            }
         }
     }
 
@@ -133,14 +135,10 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
-    protected void runOnUiThread(Runnable runnable)
-    {
-        if (_activity == null)
-        {
+    protected void runOnUiThread(Runnable runnable) {
+        if (_activity == null) {
             runnable.run();
-        }
-        else
-        {
+        } else {
             _activity.runOnUiThread(runnable);
         }
     }
@@ -165,8 +163,11 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        _onBroadcastClientListener.onServerNewFound(server);
-                        _onBroadcastClientListener.onServersChanged(_servers);
+                        if (_onBroadcastClientListener != null)
+                        {
+                            _onBroadcastClientListener.onServerNewFound(server);
+                            _onBroadcastClientListener.onServersChanged(_servers);
+                        }
                     }
                 });
             } else if (!temp.getChecksum().equals(server.getChecksum())) {
@@ -182,7 +183,10 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        _onBroadcastClientListener.onServerChanged(temp2);
+                        if (_onBroadcastClientListener != null)
+                        {
+                            _onBroadcastClientListener.onServerChanged(temp2);
+                        }
                     }
                 });
             } else {
@@ -214,7 +218,9 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            _onBroadcastClientListener.onServerRemoved(server);
+                            if (_onBroadcastClientListener != null) {
+                                _onBroadcastClientListener.onServerRemoved(server);
+                            }
                         }
                     });
 
@@ -227,7 +233,9 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    _onBroadcastClientListener.onServersChanged(_servers);
+                    if (_onBroadcastClientListener != null) {
+                        _onBroadcastClientListener.onServersChanged(_servers);
+                    }
                 }
             });
         }
