@@ -96,7 +96,7 @@ namespace ComInLan.Server
 			{
 				client.Name = freshPacket.Name;
 
-				Control.Invoke((MethodInvoker)delegate
+				RunOnUiThread(delegate
 				{
 					ClientChanged?.Invoke(client);
 				});
@@ -135,7 +135,7 @@ namespace ComInLan.Server
 				Clients.Add(client);
 			}
 
-			Control.Invoke((MethodInvoker)delegate
+			RunOnUiThread(delegate
 			{
 				ClientNew?.Invoke(client);
 
@@ -154,7 +154,7 @@ namespace ComInLan.Server
 
 			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), client);
 
-			Control.Invoke((MethodInvoker)delegate
+			RunOnUiThread(delegate
 			{
 				client.State = ClientState.WaitingPasscode;
 			});
@@ -173,7 +173,7 @@ namespace ComInLan.Server
 
 			if (passcode == client.Passcode)
 			{
-				Control.Invoke((MethodInvoker)delegate
+				RunOnUiThread(delegate
 				{
 					client.State = ClientState.Accepted;
 				});
@@ -216,7 +216,7 @@ namespace ComInLan.Server
 					{
 						Clients.Remove(client);
 
-						Control.Invoke((MethodInvoker)delegate
+						RunOnUiThread(delegate
 						{
 							ClientRemoved?.Invoke(client);
 						});
@@ -228,7 +228,7 @@ namespace ComInLan.Server
 
 			if (hasChange)
 			{
-				Control.Invoke((MethodInvoker)delegate
+				RunOnUiThread(delegate
 				{
 					ClientsChanged?.Invoke(Clients);
 				});
@@ -237,7 +237,7 @@ namespace ComInLan.Server
 
 		private void RemoveClient(CClient client)
 		{
-			Control.Invoke((MethodInvoker)delegate
+			RunOnUiThread(delegate
 			{
 				client.State = ClientState.Refused;
 			});
@@ -247,7 +247,7 @@ namespace ComInLan.Server
 				Clients.Remove(client);
 			}
 
-			Control.Invoke((MethodInvoker)delegate
+			RunOnUiThread(delegate
 			{
 				ClientRemoved?.Invoke(client);
 

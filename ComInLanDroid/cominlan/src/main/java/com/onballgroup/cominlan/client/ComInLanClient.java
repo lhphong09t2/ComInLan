@@ -138,7 +138,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
             return;
         }
 
-        getActivity().runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 server.setState(ServerState.PasscodeRequested);
@@ -151,7 +151,7 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
             return;
         }
 
-        getActivity().runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 server.setState(message == ServerMessage.Accept ?

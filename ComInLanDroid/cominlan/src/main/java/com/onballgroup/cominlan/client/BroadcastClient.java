@@ -133,6 +133,18 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
     }
 
+    protected void runOnUiThread(Runnable runnable)
+    {
+        if (_activity == null)
+        {
+            runnable.run();
+        }
+        else
+        {
+            _activity.runOnUiThread(runnable);
+        }
+    }
+
     private void handleBroadcastPacket(final IServerPacket broadcastPacket, InetAddress address) {
         final CServer server = new CServer();
 
@@ -150,7 +162,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         synchronized (_servers) {
             if (temp == null) {
                 _servers.add(server);
-                _activity.runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         _onBroadcastClientListener.onServerNewFound(server);
@@ -167,7 +179,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
                 final CServer temp2 = temp;
 
-                _activity.runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         _onBroadcastClientListener.onServerChanged(temp2);
@@ -199,7 +211,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                 if (currentUnixTimestamp - server.getRefreshTime() > CConstant.ServerCleanupPeriod / 1000) {
                     it.remove();
 
-                    _activity.runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             _onBroadcastClientListener.onServerRemoved(server);
@@ -212,7 +224,7 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
 
         if (hasChange) {
-            _activity.runOnUiThread(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     _onBroadcastClientListener.onServersChanged(_servers);

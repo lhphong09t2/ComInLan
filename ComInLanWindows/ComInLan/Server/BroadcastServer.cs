@@ -116,6 +116,21 @@ namespace ComInLan.Server
 			}
 		}
 
+		protected void RunOnUiThread(Action action)
+		{
+			if (Control == null)
+			{
+				action();
+			}
+			else
+			{
+				Control.Invoke((MethodInvoker)delegate
+				{
+					action();
+				});
+			}
+		}
+
 		private void Advertise()
 		{
 			_broadcastPacket.Name = Name;
@@ -143,10 +158,7 @@ namespace ComInLan.Server
 
 			if (client != null)
 			{
-				Control.Invoke((MethodInvoker)delegate
-				{
-					client.CallDataReceived(dataPacket.DataJson);
-				});
+				RunOnUiThread(() => client.CallDataReceived(dataPacket.DataJson));
 			}
 		}
 
