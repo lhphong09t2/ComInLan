@@ -126,7 +126,8 @@ namespace ComInLan.Server
 			else
 			{
 				responseProtocol.Message = ServerMessage.Accept;
-			}
+				client.Port = port;
+            }
 
 			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), address, port);
 		}
