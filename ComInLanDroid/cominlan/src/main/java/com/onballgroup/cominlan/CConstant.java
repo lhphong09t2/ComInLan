@@ -12,6 +12,6 @@ public class CConstant {
     public static final int AdvertisingPeriod = 5000;
     public static final int ClientRefreshPeriod = 5000;
 
-    public static final int ServerCleanupPeriod = AdvertisingPeriod + 1000;
-    public static final int ClientCleanupPeriod = ClientRefreshPeriod + 1000;
+    public static final int ServerCleanupPeriod = AdvertisingPeriod * 2 + 1000;
+    public static final int ClientCleanupPeriod = ClientRefreshPeriod * 10;
 }

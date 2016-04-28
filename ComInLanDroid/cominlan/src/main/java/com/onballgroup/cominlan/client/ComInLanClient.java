@@ -6,7 +6,6 @@ import com.onballgroup.cominlan.CConstant;
 import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IServer;
 import com.onballgroup.cominlan.model.ServerState;
-import com.onballgroup.cominlan.model.packet.ClientPacket;
 import com.onballgroup.cominlan.model.packet.ClientPacketType;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.protocol.ClientMessage;
@@ -26,18 +25,10 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
         return "ComInLan";
     }
 
-    private String _name;
-
-    @Override
-    public String getName() {
-        return _name;
-    }
-
     private Timer _clientRefreshTimer;
 
     public ComInLanClient(Activity activity, String name) {
-        super(activity);
-        _name = name;
+        super(activity, name);
     }
 
     @Override
@@ -169,16 +160,6 @@ public class ComInLanClient extends BroadcastClient implements IComInLanClient {
                 }
             }
         }
-    }
-
-    private void sendClientPacket(ClientPacketType type, String dataJson, IServer server) {
-        ClientPacket clientPacket = new ClientPacket();
-        clientPacket.setId(getId());
-        clientPacket.setName(_name);
-        clientPacket.setType(type);
-        clientPacket.setDataJson(dataJson);
-
-        sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());
     }
 }
 

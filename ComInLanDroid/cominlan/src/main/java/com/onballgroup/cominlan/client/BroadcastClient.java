@@ -9,8 +9,13 @@ import com.onballgroup.cominlan.model.BroadcastData;
 import com.onballgroup.cominlan.model.CServer;
 import com.onballgroup.cominlan.model.IBroadcastData;
 import com.onballgroup.cominlan.model.IServer;
+import com.onballgroup.cominlan.model.ServerState;
+import com.onballgroup.cominlan.model.packet.ClientPacket;
+import com.onballgroup.cominlan.model.packet.ClientPacketType;
 import com.onballgroup.cominlan.model.packet.IServerPacket;
 import com.onballgroup.cominlan.model.packet.ServerPacket;
+import com.onballgroup.cominlan.model.protocol.ClientMessage;
+import com.onballgroup.cominlan.model.protocol.ClientProtocol;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -30,6 +35,13 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         return _id;
     }
 
+    private String _name;
+
+    @Override
+    public String getName() {
+        return _name;
+    }
+
     private Activity _activity;
 
     protected Activity getActivity() {
@@ -45,9 +57,11 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
 
     private Timer _serverCleanupTimer;
 
-    public BroadcastClient(Activity activity) {
+    public BroadcastClient(Activity activity, String name) {
         _id = UUID.randomUUID().toString();
         _activity = activity;
+        _name = name;
+
         _servers = new ArrayList<IServer>();
 
         initUdp();
@@ -168,8 +182,16 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
                             _onBroadcastClientListener.onServerNewFound(server);
                             _onBroadcastClientListener.onServersChanged(_servers);
                         }
+
+                        server.setState(ServerState.PasscodeSent);
                     }
                 });
+
+                ClientProtocol protocol = new ClientProtocol();
+                protocol.setMessage(ClientMessage.CheckConnected);
+                protocol.setDataJson(String.valueOf(getListeningPort()));
+                sendClientPacket(ClientPacketType.Protocol, protocol.createJson(), server);
+
             } else if (!temp.getChecksum().equals(server.getChecksum())) {
                 temp.setId(broadcastPacket.getId());
                 temp.setName(broadcastPacket.getName());
@@ -251,6 +273,16 @@ public abstract class BroadcastClient extends NetworkUtility implements IBroadca
         }
 
         return server;
+    }
+
+    protected void sendClientPacket(ClientPacketType type, String dataJson, IServer server) {
+        ClientPacket clientPacket = new ClientPacket();
+        clientPacket.setId(getId());
+        clientPacket.setName(_name);
+        clientPacket.setType(type);
+        clientPacket.setDataJson(dataJson);
+
+        sendUdp(clientPacket.createJson(), server.getAddress(), server.getPort());
     }
 
     protected abstract void handleProtocolPacket(IServerPacket protocolPacket);

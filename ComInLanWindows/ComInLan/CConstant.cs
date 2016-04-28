@@ -16,7 +16,7 @@ namespace ComInLan
 		public const int AdvertisingPeriod = 5000;
 		public const int ClientRefreshPeriod = 5000;
 
-		public static readonly int ServerCleanupPeriod = AdvertisingPeriod + 1000;
-		public static readonly int ClientCleanupPeriod = ClientRefreshPeriod + 1000;
+		public static readonly int ServerCleanupPeriod = AdvertisingPeriod* 2 + 1000;
+		public static readonly int ClientCleanupPeriod = ClientRefreshPeriod * 10;
 	}
 }

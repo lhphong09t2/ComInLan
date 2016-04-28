@@ -10,6 +10,7 @@ import java.util.List;
 public interface IBroadcastClient {
     String getId();
     String getDomainId();
+    String getName();
     int getListeningPort();
     List<IServer> getServers();
     boolean start();

@@ -69,6 +69,9 @@ namespace ComInLan.Server
 
 			switch (protocol.Message)
 			{
+				case ClientMessage.CheckConnected:
+					HandleCheckConnectedMessage(protocolPacket, protocol, address);
+					break;
 				case ClientMessage.RequestConnect:
 					HandleRequestConnectMessage(protocolPacket, protocol, address);
 					break;
@@ -101,6 +104,31 @@ namespace ComInLan.Server
 					ClientChanged?.Invoke(client);
 				});
 			}
+		}
+
+		private void HandleCheckConnectedMessage(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
+		{
+			var port = int.Parse(protocol.DataJson);
+
+			if (!CConstant.UdpListenerPort.Contains(port))
+			{
+				return;
+			}
+
+			var client = Clients.FirstOrDefault(x => x.Id == protocolPacket.Id) as CClient;
+
+			var responseProtocol = new ServerProtocol();
+
+			if (client == null || client.State != ClientState.Accepted)
+			{
+				responseProtocol.Message = ServerMessage.Refuse;
+			}
+			else
+			{
+				responseProtocol.Message = ServerMessage.Accept;
+			}
+
+			SendServerPacket(ServerPacketType.Protocol, JsonConvert.SerializeObject(responseProtocol), address, port);
 		}
 
 		private void HandleRequestConnectMessage(ClientPacket protocolPacket, IClientProtocol protocol, IPAddress address)
@@ -267,6 +295,20 @@ namespace ComInLan.Server
 			};
 
 			SendUdp(JsonConvert.SerializeObject(reponsePacket), client.Address, client.Port);
+		}
+
+		private void SendServerPacket(ServerPacketType type, string dataJson, IPAddress address, int port)
+		{
+			var reponsePacket = new ServerPacket()
+			{
+				Id = Id,
+				DomainId = DomainId,
+				Name = Name,
+				Type = ServerPacketType.Protocol,
+				DataJson = dataJson
+			};
+
+			SendUdp(JsonConvert.SerializeObject(reponsePacket), address, port);
 		}
 	}
 }

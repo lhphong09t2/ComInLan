@@ -8,6 +8,7 @@ namespace ComInLan.Model.Protocol
 {
 	public enum ClientMessage
 	{
+		CheckConnected,
 		RequestConnect,
 		Passcode,
 		Disconnect
